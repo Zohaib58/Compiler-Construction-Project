@@ -1,0 +1,14 @@
+Step 1 after having jar and PythonDictLexer.g4 file:
+java -jar antlr-4.13.1-complete.jar SimpleLexer.g4
+
+
+Step 2 after having PythonDictLexer.interp, java, tokens:
+1. Write PythonDict.py
+2. Write LexerTest.java
+
+Step 3:
+javac -cp "antlr-4.13.1-complete.jar" PythonDictLexer.java
+
+javac -cp ".;antlr-4.13.1-complete.jar" LexerTest.java
+
+java -cp ".;antlr-4.13.1-complete.jar" LexerTest
