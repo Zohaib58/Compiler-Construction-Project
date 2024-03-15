@@ -3,8 +3,10 @@ lexer grammar PythonDictLexer;
 // Tokens for braces used for dictionaries and blocks
 BRACE_OPEN : '{' ;
 BRACE_CLOSE : '}' ;
-KEY_START : '[' ;
-KEY_END : ']' ;
+BRACKET_OPEN : '[' ;
+BRACKET_CLOSE : ']' ;
+PAREN_OPEN : '(' ;
+PAREN_CLOSE : ')' ;
 ASSIGN : '=' ;
 COLON : ':' ;
 COMMA : ',' ;
