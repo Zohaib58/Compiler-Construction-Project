@@ -53,7 +53,3 @@ To use the Python-to-Java Dictionary Compiler, follow these steps:
 Support for additional Python features and data structures. Enhanced error handling and optimization for large-scale applications. Expansion to support a full subset of Python's functionality for a comprehensive development experience.
 
 For more information on usage and contributions, refer to the detailed documentation provided with the tool.
-
---- 
-
-Make sure to adjust the content as needed to match the actual features and usage of your project. The headings and code blocks should be styled to stand out, as shown, for clarity and readability.
