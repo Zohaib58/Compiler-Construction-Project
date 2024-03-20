@@ -1,4 +1,4 @@
-# Python-to-Java Dictionary Compiler
+# Py2J (Python-to-Java Dictionary Compiler)
 
 A programming language tool designed to seamlessly translate Python dictionary syntax into Java `HashMap` code.
 
