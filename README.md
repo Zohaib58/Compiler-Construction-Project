@@ -1,7 +1,3 @@
-Sure, based on your request and the provided example, here's a structured README in a similar style:
-
----
-
 # Python-to-Java Dictionary Compiler
 
 A programming language tool designed to seamlessly translate Python dictionary syntax into Java `HashMap` code.
