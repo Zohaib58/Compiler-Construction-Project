@@ -1,4 +1,4 @@
-# Py2J (Python-to-Java Dictionary Compiler)
+# Jython (Transform Python's Data Structures to Java's)
 
 A programming language tool designed to seamlessly translate Python dictionary syntax into Java `HashMap` code.
 
