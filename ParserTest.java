@@ -5,8 +5,9 @@ public class ParserTest {
     public static void main(String[] args) throws Exception {
         // Assuming you have a string input for testing
 
-        // dict = {1 : 2, 3: 4, 5: 6, 7 : 8}; dict[9] = 10; lA = [1, 2, 3, 4, 5, 6, 7]; ltup = (1, 2, 3); 
-        String input = "_ = 1; dict = {1 : 2, 3: 4, 5: 6, 7 : 8}; dict[9] = 10; lA = [1, 2, 3, 4, 5, 6, 7]; ltup = (1, 2, 3); for item in [1, 2, 3, 4, 5] {v = 2}; a.keys();";
+        // dict = {1 : 2, 3: 4, 5: 6, 7 : 8}; dict[9] = 10; lA = [1, 2, 3, 4, 5, 6, 7]; ltup = (1, 2, 3);
+        //_ = 1; dict = {1 : 2, 3: 4, 5: 6, 7 : 8}; dict[9] = 10; lA = [1, 2, 3, 4, 5, 6, 7]; ltup = (1, 2, 3); for item in [1, 2, 3, 4, 5] {v = 2}; a.keys(); b = [1, 2, (3, 4), 9]; dict = {Person(9) : Alice(1, 2, 3)};  var = Khabees('Billan', [1, {1 : 4}]);  
+        String input = "if (2 == 3){a = 2}elif (2!=4) {b = 4};";
         CharStream charStream = CharStreams.fromString(input);
 
         // Create a lexer that feeds off of the input CharStream

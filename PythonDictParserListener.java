@@ -107,6 +107,26 @@ public interface PythonDictParserListener extends ParseTreeListener {
 	 */
 	void exitValue(PythonDictParser.ValueContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#constructor}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructor(PythonDictParser.ConstructorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#constructor}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructor(PythonDictParser.ConstructorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#argumentList}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgumentList(PythonDictParser.ArgumentListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#argumentList}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgumentList(PythonDictParser.ArgumentListContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PythonDictParser#list}.
 	 * @param ctx the parse tree
 	 */
@@ -176,6 +196,36 @@ public interface PythonDictParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMethodName(PythonDictParser.MethodNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#ifCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfCondition(PythonDictParser.IfConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#ifCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfCondition(PythonDictParser.IfConditionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#ifElifBlocks}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#ifElifBlocks}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition(PythonDictParser.ConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition(PythonDictParser.ConditionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonDictParser#expression}.
 	 * @param ctx the parse tree
