@@ -138,6 +138,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitProgram(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -218,6 +223,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -305,6 +315,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitSeparator(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitSeparator(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SeparatorContext separator() throws RecognitionException {
@@ -357,6 +372,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitVariable(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitVariable(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -449,6 +469,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitDictValueAssignToKey(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitDictValueAssignToKey(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final DictValueAssignToKeyContext dictValueAssignToKey() throws RecognitionException {
@@ -500,6 +525,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitDict(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitDict(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -560,6 +590,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitPairList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitPairList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -622,6 +657,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitPair(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitPair(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PairContext pair() throws RecognitionException {
@@ -667,6 +707,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitKey(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitKey(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -740,6 +785,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitValue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitValue(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -827,6 +877,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitConstructor(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitConstructor(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConstructorContext constructor() throws RecognitionException {
@@ -889,6 +944,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitArgumentList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitArgumentList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArgumentListContext argumentList() throws RecognitionException {
@@ -948,6 +1008,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitList(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitList(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ListContext list() throws RecognitionException {
@@ -1002,6 +1067,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitTuple(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitTuple(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1062,6 +1132,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitElementList(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitElementList(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1130,6 +1205,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitForLoop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitForLoop(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1202,6 +1282,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitIterable(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitIterable(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1276,6 +1361,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitMethodCall(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitMethodCall(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MethodCallContext methodCall() throws RecognitionException {
@@ -1327,6 +1417,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitMethodName(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitMethodName(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final MethodNameContext methodName() throws RecognitionException {
@@ -1376,6 +1471,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitIfCondition(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitIfCondition(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1445,6 +1545,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitIfElifBlocks(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitIfElifBlocks(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1565,6 +1670,11 @@ public class PythonDictParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitCondition(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitCondition(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ConditionContext condition() throws RecognitionException {
@@ -1646,6 +1756,11 @@ public class PythonDictParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof PythonDictParserListener ) ((PythonDictParserListener)listener).exitExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonDictParserVisitor ) return ((PythonDictParserVisitor<? extends T>)visitor).visitExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
