@@ -12,21 +12,8 @@ class Symbol {
         this.scopeLevel = scopeLevel;
         this.lineNumber = lineNumber;
     }
-
-    // Consider adding getters for new fields if needed
+// Consider adding getters for new fields if needed
 }
-
-class TypeChecker {
-    // Basic type compatibility check for assignment; this could be expanded for other operations.
-    public static boolean isCompatibleForAssignment(String leftType, String rightType) {
-        if (leftType.equals(rightType)) {
-            return true; // Same types are always compatible
-        }
-        // Add more rules as needed
-        return false;
-    }
-}
-
 
 class SymbolTable {
     private Stack<Map<String, Symbol>> scopeStack = new Stack<>();
@@ -71,20 +58,5 @@ class SymbolTable {
     // Implementing method to handle errors (e.g., undeclared symbols, redefinitions)
     private void handleError(String message) {
         System.err.println(message);
-    }
-
-    // New method to check the type of an assignment operation
-    public void checkAssignment(String variableName, String expressionType, int lineNumber) {
-        Symbol varSymbol = lookup(variableName);
-        if (varSymbol == null) {
-            System.err.println("Error: Undefined variable '" + variableName + "' at line " + lineNumber);
-            return;
-        }
-
-        if (!TypeChecker.isCompatibleForAssignment(varSymbol.type, expressionType)) {
-            System.err.println("Type Error: Cannot assign " + expressionType + " to " + varSymbol.type + " for variable '" + variableName + "' at line " + lineNumber);
-        } else {
-            System.out.println("Type Check Passed: " + variableName + " = <expression> at line " + lineNumber);
-        }
-    }
+    } 
 }
