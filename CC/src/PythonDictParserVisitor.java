@@ -1,4 +1,4 @@
-// Generated from PythonDictParser.g4 by ANTLR 4.13.1
+// Generated from grammar/PythonDictParser.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -147,4 +147,10 @@ public interface PythonDictParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExpression(PythonDictParser.ExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonDictParser#dictAccess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDictAccess(PythonDictParser.DictAccessContext ctx);
 }

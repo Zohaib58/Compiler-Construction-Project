@@ -1,4 +1,4 @@
-// Generated from PythonDictParser.g4 by ANTLR 4.13.1
+// Generated from grammar/PythonDictParser.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -236,4 +236,14 @@ public interface PythonDictParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpression(PythonDictParser.ExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#dictAccess}.
+	 * @param ctx the parse tree
+	 */
+	void enterDictAccess(PythonDictParser.DictAccessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#dictAccess}.
+	 * @param ctx the parse tree
+	 */
+	void exitDictAccess(PythonDictParser.DictAccessContext ctx);
 }

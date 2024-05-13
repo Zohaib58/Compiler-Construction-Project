@@ -1,13 +1,11 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-public class ParserTest {
+public class  
+ParserTest {
     public static void main(String[] args) throws Exception {
         // Assuming you have a string input for testing
-
-        // dict = {1 : 2, 3: 4, 5: 6, 7 : 8}; dict[9] = 10; lA = [1, 2, 3, 4, 5, 6, 7]; ltup = (1, 2, 3);
-        //_ = 1; dict = {1 : 2, 3: 4, 5: 6, 7 : 8}; dict[9] = 10; lA = [1, 2, 3, 4, 5, 6, 7]; ltup = (1, 2, 3); for item in [1, 2, 3, 4, 5] {v = 2}; a.keys(); b = [1, 2, (3, 4), 9]; dict = {Person(9) : Alice(1, 2, 3)};  var = Khabees('Billan', [1, {1 : 4}]);  
-        String input = "if (2 == 3){a = 2}elif (2!=4) {b = 4};";
+        String input = "List = ['Volvo', 'BMW', 'Ford', 'Mazda']";
         CharStream charStream = CharStreams.fromString(input);
 
         // Create a lexer that feeds off of the input CharStream
@@ -19,18 +17,29 @@ public class ParserTest {
         // Create a parser that feeds off the tokens buffer
         PythonDictParser parser = new PythonDictParser(tokens);
 
-        // Begin parsing at the 'dict' rule (the entry point of your parser grammar)
+        // Begin parsing at the 'program' rule (the entry point of your parser grammar)
         ParseTree tree = parser.program();
 
-        // Print LISP-style tree
         System.out.println(tree.toStringTree(parser));
+        // Instantiate your SemanticAnalyzer
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
 
-        // Alternatively, if you want to visualize the tree in a GUI
-        // Uncomment the following lines:
-        // JFrame frame = new JFrame("Parse Tree");
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.add(new JScrollPane(new JTree(tree)));
-        // frame.pack();
-        // frame.setVisible(true);
+        // Visit the tree using the semantic analyzer to perform semantic checks
+
+        semanticAnalyzer.visit(tree);
+
+        if (semanticAnalyzer.hasErrors()) {
+            System.out.println("Semantic errors detected, stopping compilation.");
+            return;  // Stop further processing if errors exist
+        }
+
+        // If no errors, proceed with code generation
+        CodeGenerator codeGenerator = new CodeGenerator();
+        String generatedCode = codeGenerator.visit(tree);
+        
+        // Output or save the generated code
+        System.out.println("Generated Code:");
+        System.out.println(generatedCode);
     }
 }
+

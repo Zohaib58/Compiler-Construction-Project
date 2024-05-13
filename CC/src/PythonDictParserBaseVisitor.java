@@ -1,4 +1,4 @@
-// Generated from PythonDictParser.g4 by ANTLR 4.13.1
+// Generated from grammar/PythonDictParser.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -172,4 +172,11 @@ public class PythonDictParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitExpression(PythonDictParser.ExpressionContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDictAccess(PythonDictParser.DictAccessContext ctx) { return visitChildren(ctx); }
 }

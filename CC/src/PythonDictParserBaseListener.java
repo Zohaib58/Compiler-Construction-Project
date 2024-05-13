@@ -1,4 +1,4 @@
-// Generated from PythonDictParser.g4 by ANTLR 4.13.1
+// Generated from grammar/PythonDictParser.g4 by ANTLR 4.13.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -287,6 +287,18 @@ public class PythonDictParserBaseListener implements PythonDictParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpression(PythonDictParser.ExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDictAccess(PythonDictParser.DictAccessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictAccess(PythonDictParser.DictAccessContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
