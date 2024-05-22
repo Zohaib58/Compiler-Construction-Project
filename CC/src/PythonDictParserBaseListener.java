@@ -256,13 +256,37 @@ public class PythonDictParserBaseListener implements PythonDictParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx) { }
+	@Override public void enterIfBlock(PythonDictParser.IfBlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx) { }
+	@Override public void exitIfBlock(PythonDictParser.IfBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElifBlock(PythonDictParser.ElifBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElifBlock(PythonDictParser.ElifBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElseBlock(PythonDictParser.ElseBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElseBlock(PythonDictParser.ElseBlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

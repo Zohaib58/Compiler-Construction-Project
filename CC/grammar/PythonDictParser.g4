@@ -41,9 +41,13 @@ methodCall : IDENTIFIER DOT methodName  PAREN_OPEN argumentList* PAREN_CLOSE ;
 
 methodName :  GET_METHOD | KEYS_METHOD | VALUES_METHOD | ITEMS_METHOD | POP_METHOD | UPDATE_METHOD ;
 
-ifCondition : IF ifElifBlocks ; 
+ifCondition : IF ifBlock elifBlock* elseBlock? ;
 
-ifElifBlocks : PAREN_OPEN condition PAREN_CLOSE BRACE_OPEN statement+ BRACE_CLOSE (ELIF ifElifBlocks)* (ELSE BRACE_OPEN statement+ BRACE_CLOSE)? ;
+ifBlock : PAREN_OPEN condition PAREN_CLOSE BRACE_OPEN statement+ BRACE_CLOSE ;
+
+elifBlock : ELIF PAREN_OPEN condition PAREN_CLOSE BRACE_OPEN statement+ BRACE_CLOSE ;
+
+elseBlock : ELSE BRACE_OPEN statement+ BRACE_CLOSE ;
 
 condition : expression (EQUALS_TO | NOT_EQUALS_TO | LESS_THAN | LESS_THAN_EQUALS_TO | GREATER_THAN | GREATER_THAN_EQUALS_TO) expression ; 
 
@@ -56,3 +60,6 @@ expression : STRING_LITERAL | NUMERIC_LITERAL | BOOLEAN_LITERAL | IDENTIFIER | m
 
 
 dictAccess : IDENTIFIER BRACKET_OPEN expression BRACKET_CLOSE ;
+//z = 5; value[]
+//dict[key]
+

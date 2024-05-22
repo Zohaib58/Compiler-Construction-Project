@@ -130,11 +130,23 @@ public interface PythonDictParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfCondition(PythonDictParser.IfConditionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PythonDictParser#ifElifBlocks}.
+	 * Visit a parse tree produced by {@link PythonDictParser#ifBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx);
+	T visitIfBlock(PythonDictParser.IfBlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonDictParser#elifBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElifBlock(PythonDictParser.ElifBlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PythonDictParser#elseBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElseBlock(PythonDictParser.ElseBlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PythonDictParser#condition}.
 	 * @param ctx the parse tree

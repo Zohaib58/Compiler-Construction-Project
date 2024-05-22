@@ -1,21 +1,29 @@
 import java.util.*;
 
 public class Symbol {
-    public static String name;
-    public static String type;
-    public static int scopeLevel;
-    public static int lineNumber;
-    public static boolean isDeclare;
+    public String name;
+    public String type;
+    public int scopeLevel;
+    public int lineNumber;
+    public boolean isDeclare;
 
     public Symbol(String name, String type, int scopeLevel, int lineNumber, boolean isDeclare) {
-        Symbol.name = name;
-        Symbol.type = type;
-        Symbol.scopeLevel = scopeLevel;
-        Symbol.lineNumber = lineNumber;
-        Symbol.isDeclare = isDeclare;
+        this.name = name;
+        this.type = type;
+        this.scopeLevel = scopeLevel;
+        this.lineNumber = lineNumber;
+        this.isDeclare = isDeclare;
     }
 
     public String getType() {
         return this.type;
+    }
+
+    public void setIsDeclare(boolean isDeclare) {
+        this.isDeclare = isDeclare;
+    }
+
+    public boolean getIsDeclare() {
+        return this.isDeclare;
     }
 }

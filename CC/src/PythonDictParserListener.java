@@ -207,15 +207,35 @@ public interface PythonDictParserListener extends ParseTreeListener {
 	 */
 	void exitIfCondition(PythonDictParser.IfConditionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonDictParser#ifElifBlocks}.
+	 * Enter a parse tree produced by {@link PythonDictParser#ifBlock}.
 	 * @param ctx the parse tree
 	 */
-	void enterIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx);
+	void enterIfBlock(PythonDictParser.IfBlockContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonDictParser#ifElifBlocks}.
+	 * Exit a parse tree produced by {@link PythonDictParser#ifBlock}.
 	 * @param ctx the parse tree
 	 */
-	void exitIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx);
+	void exitIfBlock(PythonDictParser.IfBlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#elifBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterElifBlock(PythonDictParser.ElifBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#elifBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitElifBlock(PythonDictParser.ElifBlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#elseBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseBlock(PythonDictParser.ElseBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#elseBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseBlock(PythonDictParser.ElseBlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonDictParser#condition}.
 	 * @param ctx the parse tree

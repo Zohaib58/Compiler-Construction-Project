@@ -9,26 +9,26 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     private SymbolTable symbolTable;
 
     public SemanticAnalyzer() {
-        this.symbolTable = new SymbolTable();
+        symbolTable = SymbolTable.getInstance(); // Get the singleton instance
     }
 
     public boolean hasErrors () {
         return false;
     }
 
-
     @Override
     public Void visitVariable(PythonDictParser.VariableContext ctx) { 
         String name = ctx.IDENTIFIER().getText();
         int lineNumber = ctx.getStart().getLine();
         String type = "unknown";  // Default to unknown type
-        boolean declared = symbolTable.lookup(name) != null;
+
+        boolean declared = SymbolTable.lookup(name) != null;
         boolean isSame = true;
 
         // String dictType[] = new String[3];
         // boolean isDictTypeSame = true;    
         if (ctx.STRING_LITERAL() != null) {
-            type = "string";  // Java equivalent of string
+            type = inferLiteralType(ctx.STRING_LITERAL().getText());  // Java equivalent of string
             isSame = typeCheck(declared, name, type);
         } else if (ctx.NUMERIC_LITERAL() != null) {
             type = inferLiteralType(ctx.NUMERIC_LITERAL().getText());
@@ -39,25 +39,23 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             }
         else if (ctx.list() != null) {
             type = inferListType(ctx.list());
-            //isSame = listTypeCheck(declared, name, type);
             isSame = false;
             }
         
         // Define the variable in the symbol table with the inferred type
         if (!isSame)
         {
-        symbolTable.define(name, type, lineNumber, true);
+            SymbolTable.define(name, type, lineNumber, true);
         }
         
         // Continue visiting children nodes
         return visitChildren(ctx);
     }
 
-
     @Override
     public Void visitMethodCall(PythonDictParser.MethodCallContext ctx) {
     String dictName = ctx.IDENTIFIER().getText();
-    Symbol dictSymbol = symbolTable.lookup(dictName);
+    Symbol dictSymbol = SymbolTable.lookup(dictName);
 
     if (dictSymbol == null) {
         System.out.println("Error: Dictionary not declared: " + dictName);
@@ -72,6 +70,17 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     String methodName = ctx.methodName().getText();
     List arguments = ctx.argumentList();
 
+    System.out.println("61: " + ctx.argumentList(61));
+
+    System.out.println("dictName: " + dictName);
+    
+    System.out.println("dictSymbol: " + dictSymbol);
+    
+    System.out.println("methodName: " + methodName);
+    
+    System.out.println("arguments: " + arguments);
+
+
     switch (methodName) {
         case "get":
             if (arguments.size() > 1) {
@@ -79,6 +88,12 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             } else if (arguments.size() < 1) {
                 System.err.println("Error: Too few arguments for 'get' method.");
             }
+            // else if (arguments.get(0).expression().size() == 1) {
+            //     String valueType = extractValueTypeFromHashMap(dictSymbol.getType());
+            //     // Assuming you have a way to get the variable name where the result is stored:
+            //     String resultVarName = getResultVarName(ctx.parent);
+            //     symbolTable.define(resultVarName, valueType, ctx.getStart().getLine(), true);
+            // }
             break;
 
         case "keys":
@@ -123,56 +138,20 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     
     return null;
 }
-
-    @Override
-    public Void visitMethodName(PythonDictParser.MethodNameContext ctx)
-    {
-        String methodName = ctx.getText();
-
-        // Perform semantic analysis based on the method name
-        switch (methodName) {
-            case "get":
-                break;
-            
-            case "keys":
-                // Semantic analysis for 'keys' method
-                break;
-            case "values":
-                // Semantic analysis for 'values' method
-                break;
-            case "items":
-                // Semantic analysis for 'items' method
-                break;
-            case "pop":
-                // Semantic analysis for 'pop' method
-                break;
-            case "update":
-                // Semantic analysis for 'update' method
-                break;
-            default:
-                // Handle unexpected method name
-                System.err.println("Semantic Error: Unknown method name: " + methodName);
-                break;
-        }
     
-        // Continue visiting children nodes
-        return visitChildren(ctx);
-    }
-
     public boolean typeCheck (boolean declared, String name, String type)
     {
-        boolean result = false;
         if (declared == true) {
-            Symbol s = symbolTable.lookup(name);
-            String typee = s.getType();
-            if (typee != type)
+            Symbol s = SymbolTable.lookup(name);
+            String typeSecondDeclare = s.getType();
+            if (typeSecondDeclare != type)
             {
                 System.out.println("The type does not match");
-                result = false;
-                return result;
-            }           
+                return false;
+            } 
+            return true;          
         }
-        return result;
+        return false;
     }
 
     public boolean dictTypeCheck (boolean declared, String name, String type)
@@ -196,7 +175,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // Extract the valueType substring
             String valueType = type.substring(valueTypeStartIndex, valueTypeEndIndex).trim();
 
-            Symbol s = symbolTable.lookup(name);
+            Symbol s = SymbolTable.lookup(name);
             String typee = s.getType();
 
             // Find the starting index of the keyType
@@ -288,7 +267,6 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         return "unknown"; // Default return if none of the conditions match
     }
     
-    
     public String generaliseTypes(Set<String> types)
     {
         if (types.contains("unknown"))
@@ -306,7 +284,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) return "float"; // Regex for floating-point
         if (literal.matches("\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'")) {
             // This code will execute if the literal matches the regex for a string enclosed in either double or single quotes.
-            return "string"; // Check for quotes for strings
+            return "String"; // Check for quotes for strings
         }
         
         if ("true".equalsIgnoreCase(literal) || "false".equalsIgnoreCase(literal)) return "boolean"; // Check for boolean values
@@ -322,7 +300,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         int lineNumber = ctx.getStart().getLine();
 
         String iterableId = ctx.iterable().getText();
-        Symbol iterableSymbol = symbolTable.lookup(iterableId);
+        Symbol iterableSymbol = SymbolTable.lookup(iterableId);
 
         if (iterableSymbol != null && !iterableSymbol.type.startsWith("HashMap")) 
         {
@@ -341,7 +319,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         enterScope();
 
         // Define the loop variable in the scope
-        symbolTable.define(loopVariable, keyType, lineNumber, true);
+        SymbolTable.define(loopVariable, keyType, lineNumber, true);
 
         // Visit all statements within the loop
         for (PythonDictParser.StatementContext statement : ctx.statement()) {
@@ -352,7 +330,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         exitScope();
         return visitChildren(ctx);
     }
-
+ 
     public String extractKeyType(String hashMapType)
     {
         int start = hashMapType.indexOf("<") + 1;
@@ -370,7 +348,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     {
         String dictId = ctx.IDENTIFIER().getText();
         int lineNumber = ctx.getStart().getLine();
-        Symbol dictSymbol = symbolTable.lookup(dictId);
+        Symbol dictSymbol = SymbolTable.lookup(dictId);
 
         if (dictSymbol == null || !dictSymbol.type.startsWith("HashMap"))
         {
@@ -385,18 +363,17 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         }
 
         String key = ctx.expression().getText(); // no implementation of proper expression as of now so expression would contain key only
-        Symbol keySymbol = symbolTable.lookup(key);
+        //Symbol keySymbol = SymbolTable.lookup(key);
+        String typeOfKey = inferLiteralType(key);
 
-        if (keySymbol == null || !keySymbol.type.equals(keyType))
+        if (typeOfKey == null || !typeOfKey.equals(keyType))
         {
             System.err.println("Semantic Error: Invalid key type used in dictionary access at line " + lineNumber);
         }
 
         return visitChildren(ctx);
-
     }
-
-     
+ 
     @Override
     public Void visitExpression(PythonDictParser.ExpressionContext ctx) {
         String type = null; // This will hold the inferred type for logging or error handling purposes
@@ -408,7 +385,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         } else if (ctx.BOOLEAN_LITERAL() != null) {
             type = "boolean";
         } else if (ctx.IDENTIFIER() != null) {
-            Symbol sym = symbolTable.lookup(ctx.IDENTIFIER().getText());
+            Symbol sym = SymbolTable.lookup(ctx.IDENTIFIER().getText());
             if (sym == null) {
                // error("Undefined identifier: " + ctx.IDENTIFIER().getText(), ctx);
             } else {
@@ -427,7 +404,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         } else if (ctx.getChildCount() == 3 && ctx.getChild(0).getText().equals("(") && ctx.getChild(2).getText().equals(")")) {
             visitExpression(ctx.expression(0));  // Handling parentheses
         } else {
-            visitBinaryOperation(ctx);
+            type = inferBinaryOperationType(ctx);
         }
     
         // Optionally log the type for debugging
@@ -451,6 +428,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                 if (!checkTypeCompatibility(leftType, rightType, operator)) {
                    // error("Type mismatch in expression: " + leftType + " " + operator + " " + rightType, ctx);
                 }
+               
                 break;
             case "==":
             case "!=":
@@ -467,7 +445,6 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         }
     }
 
-
     private String inferExpressionType(PythonDictParser.ExpressionContext ctx) {
 
         if (ctx.STRING_LITERAL() != null) {
@@ -483,7 +460,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         } else if (ctx.BOOLEAN_LITERAL() != null) {
             return "boolean";
         } else if (ctx.IDENTIFIER() != null) {
-            Symbol sym = symbolTable.lookup(ctx.IDENTIFIER().getText());
+            Symbol sym = SymbolTable.lookup(ctx.IDENTIFIER().getText());
             if (sym == null) {
                 error("Undefined identifier: " + ctx.IDENTIFIER().getText(), ctx);
                 return "unknown";  // Consider "unknown" as a type for unresolved symbols
@@ -505,8 +482,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         }
         return "unknown"; // Default case if none of the above
     }
-
-
+    
     private String inferBinaryOperationType(PythonDictParser.ExpressionContext ctx) {
         String leftType = inferExpressionType(ctx.expression(0));
         String rightType = inferExpressionType(ctx.expression(1));
@@ -521,14 +497,16 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                     error("Type mismatch in binary operation: " + leftType + " " + operator + " " + rightType, ctx);
                     return "unknown";
                 }
-                if (operator.equals("+") && leftType.equals("string") && rightType.equals("string")) {
-                    return "string";
+                if (operator.equals("+") && leftType.equals("String") && rightType.equals("String")) {
+                    return "String";
                 }
+                
                 return (leftType.equals("float") || rightType.equals("float")) ? "float" : "integer";
             default:
                 return "unknown"; // If operator not recognized
         }
     }
+    
     public boolean checkTypeCompatibility(String type1, String type2, String operation) {
         switch (operation) {
             case "+":
@@ -539,7 +517,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                     return true;
                 }
                 // Allow string concatenation using +
-                if ("+".equals(operation) && "string".equals(type1) && "string".equals(type2)) {
+                if ("+".equals(operation) && "String".equals(type1) && "String".equals(type2)) {
                     return true;
                 }
                 break;
@@ -575,15 +553,11 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                 {
                     keysSeen.add(key);
                 }
-            }
-            
+            }     
         }
-
         return visitChildren(ctx);
-
     }
     
-    // This method should return an evaluated key considering its type
     private Object evaluateKey(PythonDictParser.KeyContext ctx) {
         if (ctx.NUMERIC_LITERAL() != null) {
             return Integer.parseInt(ctx.getText());  // or Double, based on the format
@@ -594,28 +568,73 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         }
     }
 
+    @Override 
+    public Void visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyContext ctx) 
+    { 
+        //dictValueAssignToKey : IDENTIFIER BRACKET_OPEN key BRACKET_CLOSE ASSIGN value ;
+        String name = ctx.IDENTIFIER().getText();
+        String key = ctx.key().getText();
+        String value = ctx.value().getText();
+        Symbol s = SymbolTable.lookup(name);
+
+        if (s == null || !s.type.startsWith("HashMap"))
+        {
+            System.err.println("Semantic Error: Non-existing or non-dictionary identifier used in dictionary access at line ");
+            return null;
+        }
+
+        String keyTypeOfDict = extractKeyType(s.getType());
+        String ValTypeOfDict = extractValueTypeFromHashMap(s.getType());
+
+        String keyType = inferLiteralType(key);
+        String valType = inferLiteralType(value);
+
+        if (!keyType.equals(keyTypeOfDict))
+        {
+            System.err.println("Semantic Error: Incorrect Key type");
+        }
+
+        else if (!valType.equals(ValTypeOfDict))
+        {
+            System.err.println("Semantic Error: Incorrect Value type");
+        }
+
+        else if(keyType.equals(keyTypeOfDict) && valType.equals(ValTypeOfDict))
+        {
+
+        }
+
+
+        return visitChildren(ctx); 
+    }
 
     private void error(String message, ParserRuleContext ctx) {
         System.err.println("Error at line " + ctx.getStart().getLine() + ": " + message);
     }
 
-  
-    
+    private String extractValueTypeFromHashMap(String type) {
+        int commaPos = type.indexOf(',');
+        int endPos = type.indexOf('>');
+        if (commaPos != -1 && endPos != -1) {
+            return type.substring(commaPos + 1, endPos).trim(); // Adjust based on actual string structure
+        }
+        return "Object"; // Fallback type
+    }
+ 
+    public void enterScope() {
+        SymbolTable.enterScope();
+    }
+
+    public void exitScope() {
+        SymbolTable.exitScope();
+    }
+
+
+     
     // You'll need to define or adjust `inferExpressionType` to work similarly to your original type return method,
     // but adjusted to fit within the new structure where no type string is returned from visit methods.
     
     
-
-    
-    
-    public void enterScope() {
-        symbolTable.enterScope();
-    }
-
-    public void exitScope() {
-        symbolTable.exitScope();
-    }
-
     
     // public void verifyLiteralExpression(String literal, String operation, String identifier, int lineNumber) {
     //     String type = inferLiteralType(literal);
