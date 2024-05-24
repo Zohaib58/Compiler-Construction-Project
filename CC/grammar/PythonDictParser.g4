@@ -21,7 +21,7 @@ key : constructor | STRING_LITERAL | NUMERIC_LITERAL | dictAccess ;
 
 value : constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list  | dictAccess ;
 
-constructor : IDENTIFIER PAREN_OPEN argumentList? PAREN_CLOSE separator;
+constructor : IDENTIFIER PAREN_OPEN argumentList? PAREN_CLOSE ;
 
 argumentList : expression (COMMA expression)* ;
 
