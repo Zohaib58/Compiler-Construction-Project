@@ -3,15 +3,15 @@ options { tokenVocab=PythonDictLexer; }
 
 program : (statement separator?)+ ;
 
-statement : (variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression) separator ;
+statement : variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression ;
 
 separator : SEMICOLON ;
 
-variable : IDENTIFIER ASSIGN (constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list | tuple | dictAccess) ;
+variable : IDENTIFIER ASSIGN (constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list  | dictAccess) separator;
 
-dictValueAssignToKey : IDENTIFIER BRACKET_OPEN key BRACKET_CLOSE ASSIGN value ;
+dictValueAssignToKey : IDENTIFIER BRACKET_OPEN key BRACKET_CLOSE ASSIGN value separator;
 
-dict : BRACE_OPEN pairList? BRACE_CLOSE ;
+dict : BRACE_OPEN pairList? BRACE_CLOSE separator;
 
 pairList : pair (COMMA pair)* ;
 
@@ -19,22 +19,20 @@ pair : key COLON value ;
 
 key : constructor | STRING_LITERAL | NUMERIC_LITERAL | dictAccess ;
 
-value : constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list | tuple | dictAccess ;
+value : constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list  | dictAccess ;
 
-constructor : IDENTIFIER PAREN_OPEN argumentList? PAREN_CLOSE ;
+constructor : IDENTIFIER PAREN_OPEN argumentList? PAREN_CLOSE separator;
 
 argumentList : expression (COMMA expression)* ;
 
-list : BRACKET_OPEN elementList? BRACKET_CLOSE ;
-
-tuple : PAREN_OPEN elementList? PAREN_CLOSE ;
+list : BRACKET_OPEN elementList? BRACKET_CLOSE separator ;
 
 elementList : value (COMMA value)* ; 
 
 
 forLoop : FOR IDENTIFIER IN iterable BRACE_OPEN statement+ BRACE_CLOSE ;
 
-iterable : IDENTIFIER | list | dict | tuple ; 
+iterable : IDENTIFIER | list | dict  ; 
 
 
 methodCall : IDENTIFIER DOT methodName  PAREN_OPEN argumentList* PAREN_CLOSE ;
@@ -51,7 +49,7 @@ elseBlock : ELSE BRACE_OPEN statement+ BRACE_CLOSE ;
 
 condition : expression (EQUALS_TO | NOT_EQUALS_TO | LESS_THAN | LESS_THAN_EQUALS_TO | GREATER_THAN | GREATER_THAN_EQUALS_TO) expression ; 
 
-expression : STRING_LITERAL | NUMERIC_LITERAL | BOOLEAN_LITERAL | IDENTIFIER | methodCall | list | tuple | dict | dictAccess |
+expression : STRING_LITERAL | NUMERIC_LITERAL | BOOLEAN_LITERAL | IDENTIFIER | methodCall | list  | dict | dictAccess |
     	     expression (MULTIPLY | DIVIDE) expression  | expression (ADD | SUBTRACT) expression   
     	     | expression (EQUALS_TO | NOT_EQUALS_TO | LESS_THAN | LESS_THAN_EQUALS_TO | GREATER_THAN | GREATER_THAN_EQUALS_TO) expression  
     	     | PAREN_OPEN expression PAREN_CLOSE                    // Grouping
@@ -59,7 +57,5 @@ expression : STRING_LITERAL | NUMERIC_LITERAL | BOOLEAN_LITERAL | IDENTIFIER | m
     ;
 
 
-dictAccess : IDENTIFIER BRACKET_OPEN expression BRACKET_CLOSE ;
-//z = 5; value[]
-//dict[key]
+dictAccess : IDENTIFIER BRACKET_OPEN expression BRACKET_CLOSE separator;
 

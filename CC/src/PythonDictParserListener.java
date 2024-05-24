@@ -137,16 +137,6 @@ public interface PythonDictParserListener extends ParseTreeListener {
 	 */
 	void exitList(PythonDictParser.ListContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonDictParser#tuple}.
-	 * @param ctx the parse tree
-	 */
-	void enterTuple(PythonDictParser.TupleContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PythonDictParser#tuple}.
-	 * @param ctx the parse tree
-	 */
-	void exitTuple(PythonDictParser.TupleContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link PythonDictParser#elementList}.
 	 * @param ctx the parse tree
 	 */

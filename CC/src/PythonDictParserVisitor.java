@@ -88,12 +88,6 @@ public interface PythonDictParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitList(PythonDictParser.ListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PythonDictParser#tuple}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTuple(PythonDictParser.TupleContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link PythonDictParser#elementList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

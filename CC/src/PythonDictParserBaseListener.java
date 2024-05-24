@@ -172,18 +172,6 @@ public class PythonDictParserBaseListener implements PythonDictParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTuple(PythonDictParser.TupleContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTuple(PythonDictParser.TupleContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterElementList(PythonDictParser.ElementListContext ctx) { }
 	/**
 	 * {@inheritDoc}

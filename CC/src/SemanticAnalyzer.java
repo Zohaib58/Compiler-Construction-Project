@@ -395,8 +395,6 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             visitMethodCall(ctx.methodCall());
         } else if (ctx.list() != null) {
             visitList(ctx.list());
-        } else if (ctx.tuple() != null) {
-            visitTuple(ctx.tuple());
         } else if (ctx.dict() != null) {
             visitDict(ctx.dict());
         } else if (ctx.dictAccess() != null) {
@@ -469,7 +467,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         } else if (ctx.methodCall() != null) {
             // This presumes a method that determines the type based on the method call
             //return determineMethodCallType(ctx.methodCall());
-        } else if (ctx.list() != null || ctx.tuple() != null) {
+        } else if (ctx.list() != null) {
             return "list";  // Simplified for both lists and tuples; adjust as needed
         } else if (ctx.dict() != null) {
             return "HashMap"; // Assuming dictionaries are always mapped to some form of "HashMap"

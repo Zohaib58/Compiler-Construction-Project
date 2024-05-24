@@ -69,7 +69,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
             generatedCode.append(type).append(" ").append(name).append(" ").append(assignmenttOperator).append(" ").append(ctx.NUMERIC_LITERAL()).append(";");
             generatedCode.append(" ");
             s.setIsDeclare(true);
-            System.out.println();
+            
         }
 
         else if (s.getType().equals("String"))
@@ -77,7 +77,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
             generatedCode.append(type).append(" ").append(name).append(" ").append(assignmenttOperator).append(" ").append(ctx.STRING_LITERAL()).append(";");
             generatedCode.append(" ");
             s.setIsDeclare(true);
-            System.out.println();
+            
         }
         
         else if (s.getType().startsWith("HashMap"))
@@ -106,7 +106,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
             }
             //generatedCode.append(" ");
             s.setIsDeclare(true);
-            System.out.println();
+            
 
         }
 
@@ -131,7 +131,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
     }
     generatedCode.append(" ");
     s.setIsDeclare(true);
-    System.out.println();
+    
         }
 
         return null; 
@@ -161,7 +161,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
                     .append(".keySet()) {\n")
                     .append("}\n");
 
-        System.out.println();
+        
 
         return null;
     }
