@@ -3,7 +3,7 @@ options { tokenVocab=PythonDictLexer; }
 
 program : (statement separator?)+ ;
 
-statement : variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression;
+statement : (variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression) separator ;
 
 separator : SEMICOLON ;
 

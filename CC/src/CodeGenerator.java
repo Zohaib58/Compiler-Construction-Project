@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.Map;
-
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     StringBuilder generatedCode = new StringBuilder();
@@ -22,6 +18,32 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         }
         return generatedCode.toString();
     }
+
+    @Override
+public String visitStatement(PythonDictParser.StatementContext ctx) {
+    if (ctx.variable() != null) {
+        return visitVariable(ctx.variable());
+    } else if (ctx.dictValueAssignToKey() != null) {
+        return visitDictValueAssignToKey(ctx.dictValueAssignToKey());
+    } else if (ctx.dict() != null) {
+        return visitDict(ctx.dict());
+    } else if (ctx.forLoop() != null) {
+        return visitForLoop(ctx.forLoop());
+    } else if (ctx.list() != null) {
+        return visitList(ctx.list());
+    } else if (ctx.methodCall() != null) {
+        return visitMethodCall(ctx.methodCall());
+    } else if (ctx.ifCondition() != null) {
+        return visitIfCondition(ctx.ifCondition());
+    } else if (ctx.dictAccess() != null) {
+        return visitDictAccess(ctx.dictAccess());
+    } else if (ctx.expression() != null) {
+        return visitExpression(ctx.expression());
+    } else {
+        return null; // or some error handling if unexpected case occurs
+    }
+}
+
 
     @Override
     public String visitVariable(PythonDictParser.VariableContext ctx) {
@@ -342,7 +364,7 @@ public String visitIfBlock(PythonDictParser.IfBlockContext ctx) {
                  .append(") {\n");
 
     for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-            System.out.println("jhfhgc"+visit(stmt)); 
+           visit(stmt); 
         
     }
 
@@ -357,9 +379,9 @@ public String visitElifBlock(PythonDictParser.ElifBlockContext ctx) {
                  .append(") {\n");
 
     for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-        if (visit(stmt) != null) {        
+               
         visit(stmt); 
-        }
+        
     }
 
     generatedCode.append("}\n");
@@ -371,9 +393,9 @@ public String visitElseBlock(PythonDictParser.ElseBlockContext ctx) {
     generatedCode.append("else {\n");
 
     for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-        if (visit(stmt) != null) {        
-            generatedCode.append(visit(stmt)); 
-        }
+               
+            visit(stmt); 
+        
     }
 
     generatedCode.append("}\n");

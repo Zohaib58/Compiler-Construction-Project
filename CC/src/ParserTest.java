@@ -16,7 +16,7 @@ public class ParserTest {
 
         //String input = "dict = {1: '1', 2: '2', 3: '3'}; dict[1] ";
         //String input = "mydict = {1: '1', 2: '2', 3: '3'}; mydict[1] = '2'; ";
-        String input = "value = 7; input = 9;  if (value > input) { value = 0; input = 10;} elif (value < input) { value = - 1; } elif (value == input) { value = 50; } else { input = 0; }";
+        String input = "value = 7; input = 9;  if (value > input) { value = 0; input = 5;} elif (value < input) { value = - 1; } elif (value == input) { value = 50; } else { input = 0; }";
 
         CharStream charStream = CharStreams.fromString(input);
 
