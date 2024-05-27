@@ -7,8 +7,10 @@ public class ParserTest {
     public static void main(String[] args) throws Exception {
         
         // Hardcode the file path relative to the current working directory
-        String filePath = "test/variableConstructor.txt"; // Assuming test.txt is in the same directory
+        //String filePath = "test/variableConstructor.txt"; // Assuming test.txt is in the same directory
+        //String filePath = "test/ifElifElse.txt";
 
+        String filePath = "test/CommentTesting.txt";
         // Create a CharStream that reads from the file
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
 

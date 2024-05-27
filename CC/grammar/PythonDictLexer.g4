@@ -61,5 +61,8 @@ NUMERIC_LITERAL : '-'? [0-9]+ ('.' [0-9]+)? ;
 
 BOOLEAN_LITERAL : 'True' | 'False' ;
 
+LINE_COMMENT : '//' ~[\r\n]*;  // Emit line comments
+BLOCK_COMMENT : '/*' .*? '*/'; // Emit block comments
+
 // Skipping whitespaces and newlines
 WS : [ \t\r\n]+ -> skip ;

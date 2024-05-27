@@ -6,6 +6,7 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     public CodeGenerator ()
     {
         symbolTable = SymbolTable.getInstance(); // Get the singleton instance
+        symbolTable.printSymbolIsUSedOrNot();
         symbolTable.setDeclareForAllSymbols();
     }
 
@@ -16,6 +17,16 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         for (PythonDictParser.StatementContext stmt : ctx.statement()) {
             visit(stmt); // Visit each statement and process it
         }
+
+        // for (PythonDictParser.StatementWithCommentsContext swc : ctx.comment()) {
+        //     generatedCode.append(visitStatementWithComments(swc));
+        // }
+    
+        // Optionally, handle comments that might be trailing at the end of the program
+        // if (ctx.comment() != null) {
+        //     generatedCode.append(ctx.comment());
+        // }
+    
         return generatedCode.toString();
     }
 
@@ -402,32 +413,32 @@ public String visitElseBlock(PythonDictParser.ElseBlockContext ctx) {
     return generatedCode.toString();
 }
 
+@Override 
+public String visitComment(PythonDictParser.CommentContext ctx) 
+{ 
+    String comment =  ctx.getText() + "\n";
 
+    return comment;
+}
+
+@Override
+public String visitStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx) {
+    //StringBuilder builder = new StringBuilder();
     
+    // Check for and add any preceding comments
+    if (ctx.comment(0) != null) {
+        generatedCode.append(ctx.comment(0));
+    }
 
+    // Process the actual statement
+    generatedCode.append(ctx.statement());
 
-    // @Override
-    // public String visitExpression(PythonDictParser.ExpressionContext ctx) {
-    //     // Handle different kinds of expressions
-    //     if (ctx.getChildCount() == 3) { // Handling binary operations
-    //         String operator = ctx.getChild(1).getText(); // Operator like +, -, *, /
-    //         String left = visit(ctx.expression(0)); // Recursively handle the left expression
-    //         String right = visit(ctx.expression(1)); // Recursively handle the right expression
-    //         return "(" + left + " " + operator + " " + right + ")";
-    //     } else if (ctx.NUMERIC_LITERAL() != null) {
-    //         return ctx.NUMERIC_LITERAL().getText(); // Directly return the numeric literal
-    //     } else if (ctx.STRING_LITERAL() != null) {
-    //         return ctx.STRING_LITERAL().getText(); // Directly return the string literal
-    //     } else if (ctx.IDENTIFIER() != null) {
-    //         return ctx.IDENTIFIER().getText(); // Return the identifier's name
-    //     }
-    //     // Add more cases as needed for other types of expressions
-    //     return "";
-    // }
+    // Check for and add any following comments
+    if (ctx.comment(1) != null) {
+        generatedCode.append(ctx.comment(1));
+    }
 
-    // Consider implementing other visit methods for different context types,
-    // like visitMethodCall, visitList, etc., depending on your language specifications.
+    return generatedCode.toString();
+}
 
-    // Optionally, add methods to handle different types of statements, loops, or function calls.
-    // This method can be extended to include type checks, symbol table interactions, and more.
 }

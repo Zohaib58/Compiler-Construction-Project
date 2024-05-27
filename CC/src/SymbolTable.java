@@ -37,15 +37,21 @@ public class SymbolTable {
         if (currentScope.containsKey(name)) {
             System.err.println("Redefinition of symbol '" + name);
         } else {
-            Symbol sym = new Symbol(name, type, currentScopeLevel, lineNumber, isDeclare);
+            Symbol sym = new Symbol(name, type, currentScopeLevel, lineNumber, isDeclare, false);
             currentScope.put(name, sym);
         }
     }
 
     public static Symbol lookup(String name) {
+        Symbol s =  null;
         for (int i = scopeStack.size() - 1; i >= 0; i--) {
             if (scopeStack.get(i).containsKey(name)) {
-                return scopeStack.get(i).get(name);
+                s = scopeStack.get(i).get(name);
+                if (s.isDeclare & !s.isUsed)
+                {
+                    s.setIsUSedToTrue();
+                }
+                return s;
             }
         }
         System.err.println("Symbol '" + name + "' not defined yet.");
@@ -65,6 +71,17 @@ public class SymbolTable {
             }
         }
     }
+
+        // Method to set isDeclare to true for all symbols in all scopes
+        public static void printSymbolIsUSedOrNot() {
+            System.out.println("hello");
+            for (Map<String, Symbol> scope : scopeStack) {
+                for (Symbol symbol : scope.values()) {
+                    System.out.println(symbol.isUsed());
+                    System.out.println(symbol.name);
+                }
+            }
+        }
 
     // Method to set isDeclare to true for all symbols in all scopes
     public static void setDeclareTrueSymbol(Symbol symbol) {

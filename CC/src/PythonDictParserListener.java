@@ -256,4 +256,24 @@ public interface PythonDictParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDictAccess(PythonDictParser.DictAccessContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void enterComment(PythonDictParser.CommentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void exitComment(PythonDictParser.CommentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PythonDictParser#statementWithComments}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PythonDictParser#statementWithComments}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx);
 }

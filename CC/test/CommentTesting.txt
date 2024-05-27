@@ -1,6 +1,6 @@
 value = 7; input = 9; result = 10;
 if (value > input) {
-    value = 0; input = 5;
+    value = 0; input = 5; //value herecjcj
 } elif (value < input) {
     value = -1;
 } elif (value == input) {
