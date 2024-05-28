@@ -1,9 +1,10 @@
 parser grammar PythonDictParser;
 options { tokenVocab=PythonDictLexer; }
 
-program : (statementWithComments separator? comment?)+ ;
+program : (statement separator?)+ ;
 
-statement : variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression | LINE_COMMENT | BLOCK_COMMENT;
+
+statement : variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression;
 
 separator : SEMICOLON ;
 
@@ -59,6 +60,4 @@ expression : STRING_LITERAL | NUMERIC_LITERAL | BOOLEAN_LITERAL | IDENTIFIER | m
 
 dictAccess : IDENTIFIER BRACKET_OPEN expression BRACKET_CLOSE separator;
 
-comment : LINE_COMMENT | BLOCK_COMMENT;
 
-statementWithComments : (comment? statement comment?)* ;

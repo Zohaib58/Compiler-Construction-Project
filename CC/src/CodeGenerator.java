@@ -413,32 +413,5 @@ public String visitElseBlock(PythonDictParser.ElseBlockContext ctx) {
     return generatedCode.toString();
 }
 
-@Override 
-public String visitComment(PythonDictParser.CommentContext ctx) 
-{ 
-    String comment =  ctx.getText() + "\n";
-
-    return comment;
-}
-
-@Override
-public String visitStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx) {
-    //StringBuilder builder = new StringBuilder();
-    
-    // Check for and add any preceding comments
-    if (ctx.comment(0) != null) {
-        generatedCode.append(ctx.comment(0));
-    }
-
-    // Process the actual statement
-    generatedCode.append(ctx.statement());
-
-    // Check for and add any following comments
-    if (ctx.comment(1) != null) {
-        generatedCode.append(ctx.comment(1));
-    }
-
-    return generatedCode.toString();
-}
 
 }

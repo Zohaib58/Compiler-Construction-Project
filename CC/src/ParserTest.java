@@ -10,7 +10,7 @@ public class ParserTest {
         //String filePath = "test/variableConstructor.txt"; // Assuming test.txt is in the same directory
         //String filePath = "test/ifElifElse.txt";
 
-        String filePath = "test/CommentTesting.txt";
+        String filePath = "test/ifElifElse.txt";
         // Create a CharStream that reads from the file
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
 

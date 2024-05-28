@@ -311,30 +311,6 @@ public class PythonDictParserBaseListener implements PythonDictParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDictAccess(PythonDictParser.DictAccessContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterComment(PythonDictParser.CommentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitComment(PythonDictParser.CommentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

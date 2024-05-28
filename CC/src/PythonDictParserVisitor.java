@@ -159,16 +159,4 @@ public interface PythonDictParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDictAccess(PythonDictParser.DictAccessContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link PythonDictParser#comment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComment(PythonDictParser.CommentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link PythonDictParser#statementWithComments}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitStatementWithComments(PythonDictParser.StatementWithCommentsContext ctx);
 }
