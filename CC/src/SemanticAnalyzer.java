@@ -1,4 +1,4 @@
- import java.util.HashMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,13 +7,14 @@ import org.antlr.v4.runtime.ParserRuleContext;
 
 class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     private SymbolTable symbolTable;
+    private boolean hasErrors = false;
 
     public SemanticAnalyzer() {
         symbolTable = SymbolTable.getInstance(); // Get the singleton instance
     }
 
     public boolean hasErrors () {
-        return false;
+        return this.hasErrors;
     }
 
     @Override
@@ -59,11 +60,13 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
 
     if (dictSymbol == null) {
         System.out.println("Error: Dictionary not declared: " + dictName);
+        this.hasErrors = true;
         return null;
     }
 
     if (!dictSymbol.type.startsWith("HashMap")) {
         System.out.println("Error: Identifier is not a hashmap: " + dictName);
+        this.hasErrors = true;
         return null;
     }
 
@@ -85,8 +88,10 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         case "get":
             if (arguments.size() > 1) {
                 System.err.println("Error: Too many arguments for 'get' method.");
+                this.hasErrors = true;
             } else if (arguments.size() < 1) {
                 System.err.println("Error: Too few arguments for 'get' method.");
+                this.hasErrors = true;
             }
             // else if (arguments.get(0).expression().size() == 1) {
             //     String valueType = extractValueTypeFromHashMap(dictSymbol.getType());
@@ -100,6 +105,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // 'keys' method should not have any arguments
             if (!arguments.isEmpty()) {
                 System.err.println("Error: 'keys' method does not take arguments.");
+                this.hasErrors = true;
             }
             break;
 
@@ -107,6 +113,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // 'values' method should not have any arguments
             if (!arguments.isEmpty()) {
                 System.err.println("Error: 'values' method does not take arguments.");
+                this.hasErrors = true;
             }
             break;
 
@@ -114,6 +121,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // 'items' method should not have any arguments
             if (!arguments.isEmpty()) {
                 System.err.println("Error: 'items' method does not take arguments.");
+                this.hasErrors = true;
             }
             break;
         case "pop":
@@ -121,6 +129,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // 'pop' usually takes one optional argument (the key)
             if (arguments.size() > 1) {
                 System.err.println("Error: Too many arguments for 'pop' method.");
+                this.hasErrors = true;
             }
             break;
         case "update":
@@ -128,11 +137,13 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // 'update' should take exactly one argument, another dictionary
             if (arguments.size() != 1) {
                 System.err.println("Error: 'update' method requires exactly one argument.");
+                this.hasErrors = true;
             }
             break;
 
         default:
             System.err.println("Semantic Error: Unknown method name: " + methodName);
+            this.hasErrors = true;
             break;
     }
     
@@ -147,10 +158,12 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             if (typeSecondDeclare != type)
             {
                 System.out.println("The type does not match");
+                this.hasErrors = true;
                 return false;
             } 
             return true;          
         }
+        this.hasErrors = true;
         return false;
     }
 
@@ -197,9 +210,13 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             if (keyType != keyTypeOfOld)
             {
                 if (keyType != "Object" && keyTypeOfOld != "Object")
-                System.out.println("The type does not match");
-                result = false;
-                return result;
+                {
+                    System.out.println("The type does not match");
+                    result = false;
+                    this.hasErrors = true;
+                    return result;
+                }
+                
             }
             if (valueType != valueTypeOfOld)
             {
@@ -207,6 +224,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                 {
                     System.out.println("The type does not match");
                     result = false;
+                    this.hasErrors = true;
                     return result;
                 }
             }           
@@ -305,6 +323,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (iterableSymbol != null && !iterableSymbol.type.startsWith("HashMap")) 
         {
             System.err.println("Semantic Error: Non-iterable or non-existing identifier used in for-loop at line " + lineNumber);
+            this.hasErrors = true;
             return null;
         }
 
@@ -313,6 +332,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
        if (keyType == null)
        {
            System.err.println("Semantic Error: Unable to determine key type for hashmap");
+           this.hasErrors = true;
        }
 
         // Enter scope for the loop
@@ -353,6 +373,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (dictSymbol == null || !dictSymbol.type.startsWith("HashMap"))
         {
             System.err.println("Semantic Error: Non-existing or non-dictionary identifier used in dictionary access at line " + lineNumber);
+            this.hasErrors = true;
             return null;
         }
 
@@ -360,6 +381,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (keyType == null)
         {
             System.err.println("Semantic Error: Unable to determine key type for hashmap");
+            this.hasErrors = true;
         }
 
         String key = ctx.expression().getText(); // no implementation of proper expression as of now so expression would contain key only
@@ -369,6 +391,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (typeOfKey == null || !typeOfKey.equals(keyType))
         {
             System.err.println("Semantic Error: Invalid key type used in dictionary access at line " + lineNumber);
+            this.hasErrors = true;
         }
 
         return visitChildren(ctx);
@@ -408,6 +431,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         // Optionally log the type for debugging
         if (type != null) {
             System.out.println("Expression type at line " + ctx.getStart().getLine() + ": " + type);
+        
         }
     
         return null; // Return null to satisfy the Void return type
@@ -461,6 +485,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             Symbol sym = SymbolTable.lookup(ctx.IDENTIFIER().getText());
             if (sym == null) {
                 error("Undefined identifier: " + ctx.IDENTIFIER().getText(), ctx);
+                this.hasErrors = true;
                 return "unknown";  // Consider "unknown" as a type for unresolved symbols
             }
             return sym.type; // Return the type of the identifier from the symbol table
@@ -493,6 +518,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             case "-":
                 if (!checkTypeCompatibility(leftType, rightType, operator)) {
                     error("Type mismatch in binary operation: " + leftType + " " + operator + " " + rightType, ctx);
+                    this.hasErrors = true;
                     return "unknown";
                 }
                 if (operator.equals("+") && leftType.equals("String") && rightType.equals("String")) {
@@ -546,6 +572,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                 if (keysSeen.contains(key))
                 {
                     System.err.println("Semantic Error: Duplicate key in dictionary at line " + ctx.getStart().getLine());
+                    this.hasErrors = true;
                 }
                 else
                 {
@@ -578,6 +605,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (s == null || !s.type.startsWith("HashMap"))
         {
             System.err.println("Semantic Error: Non-existing or non-dictionary identifier used in dictionary access at line ");
+            this.hasErrors = true;
             return null;
         }
 
@@ -590,11 +618,13 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         if (!keyType.equals(keyTypeOfDict))
         {
             System.err.println("Semantic Error: Incorrect Key type");
+            this.hasErrors = true;
         }
 
         else if (!valType.equals(ValTypeOfDict))
         {
             System.err.println("Semantic Error: Incorrect Value type");
+            this.hasErrors = true;
         }
 
         else if(keyType.equals(keyTypeOfDict) && valType.equals(ValTypeOfDict))
