@@ -54,7 +54,6 @@ public class SymbolTable {
                 return s;
             }
         }
-        System.err.println("Symbol '" + name + "' not defined yet.");
         return null;
     }
     
@@ -72,16 +71,14 @@ public class SymbolTable {
         }
     }
 
-        // Method to set isDeclare to true for all symbols in all scopes
-        public static void printSymbolIsUSedOrNot() {
-            System.out.println("hello");
-            for (Map<String, Symbol> scope : scopeStack) {
-                for (Symbol symbol : scope.values()) {
-                    System.out.println(symbol.isUsed());
-                    System.out.println(symbol.name);
-                }
-            }
-        }
+        // // Method to set isDeclare to true for all symbols in all scopes
+        // public static void printSymbolIsUSedOrNot() {
+        //     for (Map<String, Symbol> scope : scopeStack) {
+        //         for (Symbol symbol : scope.values()) {
+                    
+        //         }
+        //     }
+        // }
 
     // Method to set isDeclare to true for all symbols in all scopes
     public static void setDeclareTrueSymbol(Symbol symbol) {

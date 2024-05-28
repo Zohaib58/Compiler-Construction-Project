@@ -6,7 +6,7 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     public CodeGenerator ()
     {
         symbolTable = SymbolTable.getInstance(); // Get the singleton instance
-        symbolTable.printSymbolIsUSedOrNot();
+        //symbolTable.printSymbolIsUSedOrNot();
         symbolTable.setDeclareForAllSymbols();
     }
 

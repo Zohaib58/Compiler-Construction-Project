@@ -454,7 +454,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     
         // Optionally log the type for debugging
         if (type != null) {
-            System.out.println("Expression type at line " + ctx.getStart().getLine() + ": " + type);
+            System.out.println("Logs for debugging: Expression type at line " + ctx.getStart().getLine() + ": " + type);
         
         }
     

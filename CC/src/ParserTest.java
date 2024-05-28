@@ -12,7 +12,7 @@ public class ParserTest {
 
         //String filePath = "test/ifElifElse.txt";
 
-        String filePath = "test/visitVariableInt&String.txt";
+        String filePath = "test/variableConstructor.txt";
 
         //String filePath = "test/visitVariableDict&Array.txt";
 
@@ -31,6 +31,13 @@ public class ParserTest {
 
         // Begin parsing at the 'program' rule (the entry point of your parser grammar)
         ParseTree tree = parser.program();
+
+        // Check for syntax errors
+        if (parser.getNumberOfSyntaxErrors() > 0) {
+            System.out.println("Syntax errors found, compilation stopped.");
+            return; // Exit if there are syntax errors
+        }
+
 
         System.out.println(tree.toStringTree(parser)); // Optionally print the parse tree
 
