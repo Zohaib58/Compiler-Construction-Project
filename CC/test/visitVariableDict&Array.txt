@@ -1,0 +1,10 @@
+dict myDict = {'a': 2, 'b':6};
+dict myDict2 = {'a': 2, 'b':6, 'c': 'd'}; 
+dict myDict3 = {'a': 2, 'b':6, 'c': 'd'}; 
+dict myDict3 = {3: 2, 2:6, 1:7}; 
+
+
+myArr = ['hello World', 'Computer Science', 'Compiler'];
+myArr2 = [1, 2, 3, -4, 3, 'n']; 
+myArr3 = [1, 2, 3, -4, 3];
+myArr4 = [{'a': 2, 'b':6}, {'a': 2, 'b':6, 'c': 'd'}];

@@ -23,31 +23,59 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         int lineNumber = ctx.getStart().getLine();
         String type = "unknown";  // Default to unknown type
 
-        boolean declared = SymbolTable.lookup(name) != null;
+        if (ctx.STRING_LITERAL() != null) {
+                type = inferLiteralType(ctx.STRING_LITERAL().getText());  // Java equivalent of string
+            } else if (ctx.NUMERIC_LITERAL() != null) {
+                type = inferLiteralType(ctx.NUMERIC_LITERAL().getText());
+            } else if (ctx.dict() != null) {
+                type = inferDictType(ctx.dict());
+                }
+            else if (ctx.list() != null) {
+                type = inferListType(ctx.list());
+                }
+
+        boolean isDeclared = SymbolTable.lookup(name) != null;
         boolean isSame = true;
 
-        // String dictType[] = new String[3];
-        // boolean isDictTypeSame = true;    
-        if (ctx.STRING_LITERAL() != null) {
-            type = inferLiteralType(ctx.STRING_LITERAL().getText());  // Java equivalent of string
-            isSame = typeCheck(declared, name, type);
-        } else if (ctx.NUMERIC_LITERAL() != null) {
-            type = inferLiteralType(ctx.NUMERIC_LITERAL().getText());
-            isSame = typeCheck(declared, name, type);
-        } else if (ctx.dict() != null) {
-            type = inferDictType(ctx.dict());
-            isSame = dictTypeCheck(declared, name, type);
+        if(isDeclared)
+        {
+            if(type == "dict")
+            {
+                isSame = dictTypeCheck(isDeclared, name, type);
             }
-        else if (ctx.list() != null) {
-            type = inferListType(ctx.list());
-            isSame = false;
+
+            else {
+                isSame = typeCheck(name, type);
             }
-        
-        // Define the variable in the symbol table with the inferred type
-        if (!isSame)
+        }
+
+        else if(!isDeclared || !isSame)
         {
             SymbolTable.define(name, type, lineNumber, true);
         }
+
+        // // String dictType[] = new String[3];
+        // // boolean isDictTypeSame = true;    
+        // if (ctx.STRING_LITERAL() != null) {
+        //     type = inferLiteralType(ctx.STRING_LITERAL().getText());  // Java equivalent of string
+        //     isSame = typeCheck(declared, name, type);
+        // } else if (ctx.NUMERIC_LITERAL() != null) {
+        //     type = inferLiteralType(ctx.NUMERIC_LITERAL().getText());
+        //     isSame = typeCheck(declared, name, type);
+        // } else if (ctx.dict() != null) {
+        //     type = inferDictType(ctx.dict());
+        //     isSame = dictTypeCheck(declared, name, type);
+        //     }
+        // else if (ctx.list() != null) {
+        //     type = inferListType(ctx.list());
+        //     isSame = false;
+        //     }
+        
+        // // Define the variable in the symbol table with the inferred type
+        // if (!isSame)
+        // {
+        //     SymbolTable.define(name, type, lineNumber, true);
+        // }
         
         // Continue visiting children nodes
         return visitChildren(ctx);
@@ -150,9 +178,8 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     return null;
 }
     
-    public boolean typeCheck (boolean declared, String name, String type)
+    public boolean typeCheck (String name, String type)
     {
-        if (declared == true) {
             Symbol s = SymbolTable.lookup(name);
             String typeSecondDeclare = s.getType();
             if (typeSecondDeclare != type)
@@ -160,11 +187,8 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                 System.out.println("The type does not match");
                 this.hasErrors = true;
                 return false;
-            } 
-            return true;          
-        }
-        this.hasErrors = true;
-        return false;
+            }         
+        return true;  
     }
 
     public boolean dictTypeCheck (boolean declared, String name, String type)
