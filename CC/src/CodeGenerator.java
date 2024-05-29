@@ -1,4 +1,3 @@
-
 public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     StringBuilder generatedCode = new StringBuilder();
     private SymbolTable symbolTable;
