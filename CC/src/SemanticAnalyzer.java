@@ -10,7 +10,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     private boolean hasErrors = false;
 
     public SemanticAnalyzer() {
-        symbolTable = SymbolTable.getInstance(); // Get the singleton instance
+        symbolTable = SymbolTable.getInstance(); // Get the singleton instance, just like yourself
     }
 
     public boolean hasErrors () {
@@ -21,7 +21,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     public Void visitVariable(PythonDictParser.VariableContext ctx) { 
         String name = ctx.IDENTIFIER().getText();
         int lineNumber = ctx.getStart().getLine();
-        String type = "unknown";  // Default to unknown type
+        String type = "unknown";  // Default to unknown type, like your gender?
 
         if (ctx.STRING_LITERAL() != null) {
                 type = inferLiteralType(ctx.STRING_LITERAL().getText());  // Java equivalent of string
@@ -37,7 +37,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         boolean isDeclared = SymbolTable.lookup(name) != null;
         boolean isSame = true;
 
-        if(isDeclared)
+        if(isDeclared) // if shariq sucks, then:
         {
             if(type == "dict")
             {
@@ -49,9 +49,12 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             }
         }
 
+        // TODO: VSCode Extension
+        // TODO: get gud
+
         else if(!isDeclared || !isSame)
         {
-            SymbolTable.define(name, type, lineNumber, true);
+            SymbolTable.define(name, type, lineNumber, true); // might be skill issue
         }
 
         // // String dictType[] = new String[3];
@@ -328,6 +331,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // This code will execute if the literal matches the regex for a string enclosed in either double or single quotes.
             return "String"; // Check for quotes for strings
         }
+        
         
         if ("true".equalsIgnoreCase(literal) || "false".equalsIgnoreCase(literal)) return "boolean"; // Check for boolean values
     // Add more types as necessary
