@@ -12,7 +12,7 @@ variable : IDENTIFIER ASSIGN (constructor | STRING_LITERAL | NUMERIC_LITERAL | d
 
 dictValueAssignToKey : IDENTIFIER BRACKET_OPEN key BRACKET_CLOSE ASSIGN value separator;
 
-dict : BRACE_OPEN pairList? BRACE_CLOSE separator;
+dict : BRACE_OPEN pairList? BRACE_CLOSE;
 
 pairList : pair (COMMA pair)* ;
 
@@ -26,7 +26,7 @@ constructor : IDENTIFIER PAREN_OPEN argumentList? PAREN_CLOSE ;
 
 argumentList : expression (COMMA expression)* ;
 
-list : BRACKET_OPEN elementList? BRACKET_CLOSE separator ;
+list : BRACKET_OPEN elementList? BRACKET_CLOSE ;
 
 elementList : value (COMMA value)* ; 
 

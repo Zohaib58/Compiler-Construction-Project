@@ -75,7 +75,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
             type = s.getType();
         }
 
-        if (s.getType().equals("integer")) 
+        if (s.getType().equals("Integer")) 
         {
             generatedCode.append(type).append(" ").append(name).append(" ").append(assignmenttOperator).append(" ").append(ctx.NUMERIC_LITERAL()).append(";");
             generatedCode.append(" ");

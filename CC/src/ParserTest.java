@@ -12,7 +12,7 @@ public class ParserTest {
 
         //String filePath = "test/ifElifElse.txt";
 
-        String filePath = "test/variableConstructor.txt";
+        String filePath = "test/ifElifElse.txt";
 
         //String filePath = "test/visitVariableDict&Array.txt";
 

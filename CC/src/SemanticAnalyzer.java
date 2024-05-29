@@ -301,7 +301,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         // This method will determine the type based on the specific kind of value
         // For example, it could be a STRING_LITERAL, NUMERIC_LITERAL, etc.
         if (valueCtx.STRING_LITERAL() != null) {
-            return "string";
+            return "String";
         } else if (valueCtx.NUMERIC_LITERAL() != null) {
             return inferLiteralType(valueCtx.NUMERIC_LITERAL().getText());
         }
@@ -322,8 +322,8 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     }
 
     public String inferLiteralType(String literal) {
-        if (literal.matches("-?\\d+")) return "integer";    // Regex for integer
-        if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) return "float"; // Regex for floating-point
+        if (literal.matches("-?\\d+")) return "Integer";    // Regex for integer
+        if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) return "Float"; // Regex for floating-point
         if (literal.matches("\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'")) {
             // This code will execute if the literal matches the regex for a string enclosed in either double or single quotes.
             return "String"; // Check for quotes for strings
