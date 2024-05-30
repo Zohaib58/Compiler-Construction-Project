@@ -10,14 +10,14 @@ public class ParserTest {
         //String filePath = "test/variableConstructor.txt"; // Assuming test.txt is in the same directory
         //String filePath = "test/ifElifElse.txt";
 
-        //String filePath = "test/ifElifElse.txt";
+        String filePath = "test/ifElifElse.txt";
 
         //String filePath = "test/recursiveCheck.txt";
 
         //String filePath = "test/visitVariableDict&Array.txt";
 
        //String filePath = "test/arrInsideDict.txt";
-       String filePath = "test/constructor.txt";
+       //String filePath = "test/constructor.txt";
 
         // Create a CharStream that reads from the file
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
@@ -39,7 +39,6 @@ public class ParserTest {
             System.out.println("Syntax errors found, compilation stopped.");
             return; // Exit if there are syntax errors
         }
-
 
         System.out.println(tree.toStringTree(parser)); // Optionally print the parse tree
 

@@ -4,7 +4,9 @@ options { tokenVocab=PythonDictLexer; }
 program : (statement separator?)+ ;
 
 
-statement : variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression;
+statement : statementWithLineComments | variable | dictValueAssignToKey | dict | forLoop | list | methodCall | ifCondition | dictAccess | expression;
+
+statementWithLineComments : LINE_COMMENT | BLOCK_COMMENT;
 
 separator : SEMICOLON ;
 

@@ -40,6 +40,18 @@ public class PythonDictParserBaseListener implements PythonDictParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStatementWithLineComments(PythonDictParser.StatementWithLineCommentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStatementWithLineComments(PythonDictParser.StatementWithLineCommentsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSeparator(PythonDictParser.SeparatorContext ctx) { }
 	/**
 	 * {@inheritDoc}

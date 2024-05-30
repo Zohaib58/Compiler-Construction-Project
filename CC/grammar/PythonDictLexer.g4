@@ -61,8 +61,11 @@ NUMERIC_LITERAL : '-'? [0-9]+ ('.' [0-9]+)? ;
 
 BOOLEAN_LITERAL : 'True' | 'False' ;
 
-//LINE_COMMENT : '//' ~[\r\n]*;  // Emit line comments
-//BLOCK_COMMENT : '/*' .*? '*/'; // Emit block comments
+// Token for single-line comments
+LINE_COMMENT : '//' ~[\r\n]* ;
+
+// Token for multi-line comments
+BLOCK_COMMENT : '/*' .*? '*/' ;
 
 // Skipping whitespaces and newlines
 WS : [ \t\r\n]+ -> skip ;

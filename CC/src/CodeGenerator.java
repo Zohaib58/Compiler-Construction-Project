@@ -18,21 +18,16 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         for (PythonDictParser.StatementContext stmt : ctx.statement()) {
             visit(stmt); // Visit each statement and process it
         }
-
-        // for (PythonDictParser.StatementWithCommentsContext swc : ctx.comment()) {
-        //     generatedCode.append(visitStatementWithComments(swc));
-        // }
-    
-        // Optionally, handle comments that might be trailing at the end of the program
-        // if (ctx.comment() != null) {
-        //     generatedCode.append(ctx.comment());
-        // }
-    
         return generatedCode.toString();
     }
 
     @Override
 public String visitStatement(PythonDictParser.StatementContext ctx) {
+    if (ctx.statementWithLineComments() != null)
+    {
+        generatedCode.append(ctx.statementWithLineComments().getText());
+       generatedCode.append("\n");
+    }
     if (ctx.variable() != null) {
         return visitVariable(ctx.variable());
     } else if (ctx.dictValueAssignToKey() != null) {
@@ -57,7 +52,8 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
     //     return visitConstructor(ctx.variable().constructor());
     // }
     else {
-        return null; // or some error handling if unexpected case occurs
+ // or some error handling if unexpected case occurs
+    return null;
     }
 }
 
