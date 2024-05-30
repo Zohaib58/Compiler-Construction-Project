@@ -12,11 +12,13 @@ public class ParserTest {
 
         //String filePath = "test/ifElifElse.txt";
 
-        String filePath = "test/recursiveCheck.txt";
+        //String filePath = "test/recursiveCheck.txt";
 
         //String filePath = "test/visitVariableDict&Array.txt";
 
-       // String filePath = "test/arrInsideDict.txt";
+       //String filePath = "test/arrInsideDict.txt";
+       String filePath = "test/constructor.txt";
+
         // Create a CharStream that reads from the file
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
 

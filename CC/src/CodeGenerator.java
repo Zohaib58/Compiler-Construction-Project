@@ -51,7 +51,12 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
         return visitDictAccess(ctx.dictAccess());
     } else if (ctx.expression() != null) {
         return visitExpression(ctx.expression());
-    } else {
+    }
+    // else if (ctx.variable().constructor() != null) 
+    // {
+    //     return visitConstructor(ctx.variable().constructor());
+    // }
+    else {
         return null; // or some error handling if unexpected case occurs
     }
 }
@@ -141,15 +146,35 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
                             .append(value.getText()) // Make sure this returns the appropriate string representation
                             .append(");\n");
     }
+
     generatedCode.append(" ");
     s.setIsDeclare(true);
     
         }
+        else if(ctx.constructor() != null)
+        {
+            PythonDictParser.ConstructorContext obj = ctx.constructor();
 
-        new ArrayList<>().add(generatedCode)
+            String id = obj.IDENTIFIER().getText();
+            String args = visitArgumentList(obj.argumentList()); // Ensure you have a method to process and return comma-separated arguments
+            System.out.println(obj.argumentList().getText());
+            
+            generatedCode.append(id)
+            .append(" ")
+            .append(name)
+            .append(" = new ")
+            .append(id)
+            .append(obj.PAREN_OPEN())
+            .append(obj.argumentList().getText())
+            .append(obj.PAREN_CLOSE() + ";");
+            return generatedCode.toString();
+        }
+
+        new ArrayList<>().add(generatedCode);
         return null; 
         
     }
+
 
     @Override
     public String visitForLoop(PythonDictParser.ForLoopContext ctx) {
@@ -421,12 +446,30 @@ public String visitValue(PythonDictParser.ValueContext ctx){
     {
         return visitList(ctx.list());
     }
+    return null;
 }
 
-@Override 
-public String visitList(PythonDictParser.ListContext ctx)
-{
-    ctx.
-    generatedCode.append("new ArrayList<>().add(generatedCode)")  
-}
+// @Override
+// public String visitConstructor(PythonDictParser.ConstructorContext ctx) {
+//     String id = ctx.IDENTIFIER().getText();
+//     String args = visitArgumentList(ctx.argumentList()); // Ensure you have a method to process and return comma-separated arguments
+    
+//     generatedCode.append(id)
+//     .append(" ")
+//     .append(id)
+//     .append(" = new ")
+//     .append(id)
+//     .append(ctx.PAREN_OPEN())
+//     .append(args)
+//     .append(ctx.PAREN_CLOSE());
+//     return generatedCode.toString();
+// }
+
+
+// @Override 
+// public String visitList(PythonDictParser.ListContext ctx)
+// {
+//     ctx.generatedCode.append("new ArrayList<>().add(generatedCode)");
+//     return null;
+
 }
