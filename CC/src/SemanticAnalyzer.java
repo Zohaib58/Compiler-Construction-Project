@@ -57,30 +57,6 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             SymbolTable.define(name, type, lineNumber, true); // might be skill issue
         }
 
-        // // String dictType[] = new String[3];
-        // // boolean isDictTypeSame = true;    
-        // if (ctx.STRING_LITERAL() != null) {
-        //     type = inferLiteralType(ctx.STRING_LITERAL().getText());  // Java equivalent of string
-        //     isSame = typeCheck(declared, name, type);
-        // } else if (ctx.NUMERIC_LITERAL() != null) {
-        //     type = inferLiteralType(ctx.NUMERIC_LITERAL().getText());
-        //     isSame = typeCheck(declared, name, type);
-        // } else if (ctx.dict() != null) {
-        //     type = inferDictType(ctx.dict());
-        //     isSame = dictTypeCheck(declared, name, type);
-        //     }
-        // else if (ctx.list() != null) {
-        //     type = inferListType(ctx.list());
-        //     isSame = false;
-        //     }
-        
-        // // Define the variable in the symbol table with the inferred type
-        // if (!isSame)
-        // {
-        //     SymbolTable.define(name, type, lineNumber, true);
-        // }
-        
-        // Continue visiting children nodes
         return visitChildren(ctx);
     }
 
@@ -273,7 +249,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             }
             if (pair.value() != null)
             {
-                valueTypes.add(inferLiteralType(pair.value().getText()));
+                valueTypes.add(inferType(pair.value()));
             }
         }
         String keyType = generaliseTypes(keyTypes);
@@ -291,7 +267,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     
         if (listCtx.elementList() != null) { // Check if elementList exists
             for (PythonDictParser.ValueContext element : listCtx.elementList().value()) {
-                elementTypes.add(inferValueType(element)); // Assuming you have a method to infer the type based on ValueContext
+                elementTypes.add(inferType(element)); // Assuming you have a method to infer the type based on ValueContext
             }
         }
     
@@ -324,6 +300,37 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         return "Object";  // If there are mixed types, generalize to Object
     }
 
+    public String inferType(ParserRuleContext ctx) {
+        if (ctx instanceof PythonDictParser.DictContext) {
+            return inferDictType((PythonDictParser.DictContext) ctx);
+        } else if (ctx instanceof PythonDictParser.ListContext) {
+            return inferListType((PythonDictParser.ListContext) ctx);
+        } else if (ctx instanceof PythonDictParser.ValueContext) {
+            // Handle ValueContext by checking its specific type
+            PythonDictParser.ValueContext valueCtx = (PythonDictParser.ValueContext) ctx;
+            return inferValueContextType(valueCtx);
+        } else {
+            // For literals or unrecognized types, pass their text to inferLiteralType
+            String text = ctx.getText();
+            return inferLiteralType(text);
+        }
+    }
+    
+    private String inferValueContextType(PythonDictParser.ValueContext ctx) {
+        // You might need to further inspect the type of ValueContext
+        // Example: it could be a literal, another dictionary, a list, etc.
+        if (ctx.constructor() != null) {
+            return "ConstructorType"; // Just an example, adjust based on your grammar
+        } else if (ctx.dict() != null) {
+            return inferDictType(ctx.dict());
+        } else if (ctx.list() != null) {
+            return inferListType(ctx.list());
+        } else {
+            // Handle other possible types or fallback
+            return inferLiteralType(ctx.getText());
+        }
+    }
+    
     public String inferLiteralType(String literal) {
         if (literal.matches("-?\\d+")) return "Integer";    // Regex for integer
         if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) return "Float"; // Regex for floating-point
@@ -686,176 +693,6 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     }
 
 
-     
-    // You'll need to define or adjust `inferExpressionType` to work similarly to your original type return method,
-    // but adjusted to fit within the new structure where no type string is returned from visit methods.
-    
-    
-    
-    // public void verifyLiteralExpression(String literal, String operation, String identifier, int lineNumber) {
-    //     String type = inferLiteralType(literal);
-    //     Symbol sym = symbolTable.lookup(identifier);
-    //     if (sym == null) {
-    //         System.err.println("Error: Variable '" + identifier + "' used before declaration at line " + lineNumber);
-    //         return;
-    //     }
-    
-    //     if (!checkTypeCompatibility(sym.type, type, operation)) {
-    //         System.err.println("Type Error: Incompatible types for operation '" + operation + "' between " + sym.type + " and " + type + " at line " + lineNumber);
-    //     } else {
-    //         System.out.println("Valid operation between " + sym.type + " and " + type);
-    //     }
-    // }
-    
-    
-
-    
-
-
-
-
-    // public void verifyExpression(String identifier1, String identifier2, String operation, int lineNumber) {
-    //     Symbol sym1 = symbolTable.lookup(identifier1);
-    //     Symbol sym2 = symbolTable.lookup(identifier2);
-
-    //     if (sym1 == null || sym2 == null) {
-    //         System.err.println("Error: One or more variables used before declaration at line " + lineNumber);
-    //         return;
-    //     }
-
-    //     String resultType = inferExpressionType(sym1.type, sym2.type, operation);
-    //     if ("unknown".equals(resultType)) {
-    //         System.err.println("Type Error: Incompatible types for operation '" + operation + "' at line " + lineNumber);
-    //     } else {
-    //         System.out.println("Operation result type: " + resultType);
-    //     }
-    // }
-
-    // public void verifyOperation(String identifier, String type2, String operation, int lineNumber) {
-    //     Symbol sym = symbolTable.lookup(identifier);
-    //     if (sym == null) {
-    //         System.err.println("Error: Variable '" + identifier + "' used before declaration at line " + lineNumber);
-    //         return;
-    //     }
-
-    //     if (!checkTypeCompatibility(sym.type, type2, operation)) {
-    //         System.err.println("Type Error: Incompatible types for operation '" + operation + "' between " + sym.type + " and " + type2 + " at line " + lineNumber);
-    //     }
-    // }
-
-    // public void verifyCondition(String identifier, int lineNumber) {
-    //     Symbol sym = symbolTable.lookup(identifier);
-    //     if (sym == null) {
-    //         System.err.println("Error: Variable '" + identifier + "' used in condition before declaration at line " + lineNumber);
-    //         return;
-    //     }
-
-    //     if (!"boolean".equals(sym.type)) {
-    //         System.err.println("Type Error: Condition expression not boolean at line " + lineNumber);
-    //     }
-    // }
-
-    // public void visitIfStatement(String conditionIdentifier, int lineNumber) {
-    //     // Lookup the condition variable to ensure it is declared and is a boolean
-    //     Symbol conditionSymbol = symbolTable.lookup(conditionIdentifier);
-    //     if (conditionSymbol == null) {
-    //         System.err.println("Error: Condition variable '" + conditionIdentifier + "' used before declaration at line " + lineNumber);
-    //         return;
-    //     }
-
-    //     if (!"boolean".equals(conditionSymbol.type)) {
-    //         System.err.println("Type Error: Condition expression not boolean at line " + lineNumber);
-    //     }
-
-    //     // Assuming entering the 'if' block
-    //     enterScope();
-    // }
-
-
-    // public void visitForLoop(String loopVariable, String startValue, String endValue, int lineNumber) {
-    //     // First, check if the start and end values are integers
-    //     if (!"integer".equals(inferLiteralType(startValue)) || !"integer".equals(inferLiteralType(endValue))) {
-    //         System.err.println("Type Error: Start and end values of the loop must be integers at line " + lineNumber);
-    //         return;
-    //     }
-    
-    //     // Enter new scope for the loop
-    //     enterScope();
-    
-    //     // Define the loop variable in the new scope with type 'integer'
-    //     // Assuming loop variables are declared implicitly by the loop statement
-    //     symbolTable.define(loopVariable, "integer", lineNumber);
-    
-    //     // Assuming `exitScope()` will be called when exiting the loop block
-    //     // This would typically be called from the part of the code that manages the loop body
-    // }
-
-//     @Override
-// public Void visitIfCondition(PythonDictParser.IfConditionContext ctx) {
-//     // Visit the if-elif-else blocks
-//     return visitIfElifBlocks(ctx.ifElifBlocks());
-// }
-
-// @Override
-// public Void visitIfElifBlocks(PythonDictParser.IfElifBlocksContext ctx) {
-//     // First, evaluate the condition (ensuring it's a boolean expression)
-//     String conditionResultType = visitExpression(ctx.condition().expression(0));
-//     if (!"boolean".equals(conditionResultType)) {
-//         System.err.println("Type Error: Condition expression not boolean at line " + ctx.getStart().getLine());
-//     }
-
-    // Enter scope for the block
-//     enterScope();
-
-//     // Visit all statements within the current block
-//     for (PythonDictParser.StatementContext statement : ctx.statement()) {
-//         visitStatement(statement);
-//     }
-
-//     // Exit the current scope
-//     exitScope();
-
-//     // Handle elif and else parts similarly
-//     if (ctx.elifPart() != null) {
-//         visitIfElifBlocks(ctx.elifPart());
-//     }
-//     if (ctx.elsePart() != null) {
-//         visit(ctx.elsePart());
-//     }
-
-//     return null; // Void return type for visitor methods that do not produce a value
-// }
-
-  
-
-
-//     @Override
-// public Void visitForLoop(PythonDictParser.ForLoopContext ctx) {
-//     // First, ensure the iterable is indeed iterable
-//     String iterableType = visitIterable(ctx.iterable());
-//     if (!iterableType.equals("list") && !iterableType.equals("tuple") && !iterableType.equals("dict")) {
-//         System.err.println("Type Error: Non-iterable used in for loop at line " + ctx.getStart().getLine());
-//     }
-
-//     // Enter scope for the loop
-//     enterScope();
-
-//     // Define the loop variable in the scope
-//     String loopVariable = ctx.IDENTIFIER().getText();
-//     symbolTable.define(loopVariable, "integer", ctx.getStart().getLine());
-
-//     // Visit all statements within the loop
-//     for (PythonDictParser.StatementContext statement : ctx.statement()) {
-//         visitStatement(statement);
-//     }
-
-//     // Exit the loop scope
-//     exitScope();
-
-//     return null;
-// }
-
-    
     public void exitForLoop() {
         // Exiting the scope of the for loop
         exitScope();

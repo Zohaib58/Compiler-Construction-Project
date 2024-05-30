@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     StringBuilder generatedCode = new StringBuilder();
     private SymbolTable symbolTable;
@@ -144,6 +146,7 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
     
         }
 
+        new ArrayList<>().add(generatedCode)
         return null; 
         
     }
@@ -412,5 +415,18 @@ public String visitElseBlock(PythonDictParser.ElseBlockContext ctx) {
     return generatedCode.toString();
 }
 
+@Override
+public String visitValue(PythonDictParser.ValueContext ctx){
+    if (ctx.list() != null)
+    {
+        return visitList(ctx.list());
+    }
+}
 
+@Override 
+public String visitList(PythonDictParser.ListContext ctx)
+{
+    ctx.
+    generatedCode.append("new ArrayList<>().add(generatedCode)")  
+}
 }
