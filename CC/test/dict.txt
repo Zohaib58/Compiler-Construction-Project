@@ -1,0 +1,13 @@
+stock_symbols = {
+    'AAPL': 'Apple Inc.',
+    'GOOGL': 'Alphabet Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'AMZN': 'Amazon.com Inc.',
+    'TSLA': 'Tesla, Inc.',
+    'FB': 'Meta Platforms, Inc.',
+    'NFLX': 'Netflix, Inc.',
+    'NVDA': 'NVIDIA Corporation',
+    'ADBE': 'Adobe Inc.',
+    'INTC': 'Intel Corporation'
+};
+

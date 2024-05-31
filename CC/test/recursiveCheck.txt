@@ -20,3 +20,15 @@ complexDict = {
         }
     }
 };
+
+complexDict.update(    "key1": {
+        "nestedKey1": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": "deepValue"}]
+        },
+        "nestedKey2": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": "deepValue"}]
+        }
+    }
+);
