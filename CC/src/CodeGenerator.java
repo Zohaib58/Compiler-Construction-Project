@@ -85,15 +85,27 @@ public String visitStatement(PythonDictParser.StatementContext ctx) {
         } else if (ctx.NUMERIC_LITERAL() != null) {
             variableCode.append(ctx.NUMERIC_LITERAL().getText());
         } else if (ctx.dict() != null) {
-            variableCode.append(visitDict(ctx.dict()));
+
+            if (ctx.dict().pairList() != null) {
+                variableCode.append(visitDict(ctx.dict()));
+            } else {
+                variableCode.append("new " + type);
+            }
         } else if (ctx.list() != null) {
-            variableCode.append(visitList(ctx.list()));
+            if (ctx.list().elementList() != null) {
+                variableCode.append(visitList(ctx.list()));
+            } else {
+                variableCode.append("new " + type);
+            }
         }
         return variableCode.toString();
     }
 
     @Override
     public String visitDict(PythonDictParser.DictContext ctx) {
+
+        
+
         StringBuilder dictBuilder = new StringBuilder("new HashMap<>() {{\n");
         ctx.pairList().pair().forEach(pair -> {
             dictBuilder.append("    put(")

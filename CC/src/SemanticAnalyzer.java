@@ -28,6 +28,8 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             } else if (ctx.NUMERIC_LITERAL() != null) {
                 type = inferLiteralType(ctx.NUMERIC_LITERAL().getText());
             } else if (ctx.dict() != null) {
+
+
                 type = inferDictType(ctx.dict());
                 }
             else if (ctx.list() != null) {
@@ -236,11 +238,18 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     }
     
     public String inferDictType(PythonDictParser.DictContext dictCtx){
+
+
+       
+
         Set<String> keyTypes = new HashSet<>();
         Set<String> valueTypes = new HashSet<>();
 
         //String[] result = new String [3];
 
+        if (dictCtx.pairList() != null) {
+            
+        
         for (PythonDictParser.PairContext pair : dictCtx.pairList().pair())
         {
             if (pair.key() != null)
@@ -252,6 +261,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                 valueTypes.add(inferType(pair.value()));
             }
         }
+    }
         String keyType = generaliseTypes(keyTypes);
         String valueType = generaliseTypes(valueTypes);
 
@@ -597,7 +607,9 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     {
         Set<Object> keysSeen = new HashSet<>();
         
-        for (PythonDictParser.PairContext pair : ctx.pairList().pair())
+        if (ctx.pairList() != null)
+        {
+            for (PythonDictParser.PairContext pair : ctx.pairList().pair())
         {
             String key = "";
             if (pair.key() != null)
@@ -614,7 +626,9 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
                     keysSeen.add(key);
                 }
             }     
+        }    
         }
+        
         return visitChildren(ctx);
     }
     
