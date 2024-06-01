@@ -7,13 +7,34 @@ public class ParserTest {
     public static void main(String[] args) throws Exception {
         
         // Hardcode the file path relative to the current working directory
-        //String filePath = "test/variableConstructor.txt"; // Assuming test.txt is in the same directory
+       // String filePath = "test/putValueInEmptyDic.txt";      //Semantic Error
+       //String filePath = "test/emptyFile.txt";                //Semantic Error
+       //String filePath = "test/putValueInEmptyList.txt";      //Semantic Error
+       //String filePath = "test/isUsed.txt";                   //Exception
+       //String filePath = "test/ListInsideDictByName.txt";     //Semantic Error
+       //String filePath = "test/constructor.txt";              //Code Wrong Generation
+       //String filePath = "test/commentsBetweenLine.txt";      //Semantic Error
+       //String filePath = "test/commentsStartEnd.txt";         //Code Gen Error, wrong positioning
+
+
+
+
+
+        String filePath = "test/variableConstructor.txt"; // Assuming test.txt is in the same directory
         //String filePath = "test/ifElifElse.txt";
 
-        String filePath = "test/emptyList.txt";
+        //String filePath = "test/dictionaryMaking.txt";
+        //String filePath = "test/emptyList.txt";
+        
+        //String filePath = "test/ifElifElse.txt";
 
-       
 
+       //String filePath = "test/dictMethods.txt";
+
+       //String filePath = "test/dictMethods.txt";
+       //String filePath = "test/arrayMaking.txt";
+       //String filePath = "test/dictionaryMaking.txt";
+        //String filePath =  "test/recursiveCheck.txt";
         //String filePath = "test/visitVariableDict&Array.txt";
 
        //String filePath = "test/arrInsideDict.txt";

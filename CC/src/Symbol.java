@@ -21,11 +21,14 @@ public class Symbol {
         return this.type;
     }
 
-    public boolean isUsed() {
+    public boolean getIsUsed() {
         return this.isUsed;
     }
 
-    public void setIsUSedToTrue() {
+    public String getName (){
+        return this.name;
+    }
+    public void setIsUSed() {
          this.isUsed = true;
     }
 
