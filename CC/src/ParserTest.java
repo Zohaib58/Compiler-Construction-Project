@@ -16,17 +16,7 @@ public class ParserTest {
         //String filePath = "test/emptyList.txt";
         //String filePath = "test/putValueInEmptyDic.txt";
 
-<<<<<<< Updated upstream
-        //String filePath = "test/forLoop.txt";
-        //String filePath = "test/fail/forLoopSE.txt";
-        //String filePath = "test/fail/dictSE.txt";
-
-        //String filePath = "test/fail/dictMethodSemE.txt";
-
-        String filePath = "test/fail/ifConditionSemE.txt";
-=======
         String filePath = "test/pass/ifElifElse.txt";
->>>>>>> Stashed changes
 
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
         PythonDictLexer lexer = new PythonDictLexer(charStream);
