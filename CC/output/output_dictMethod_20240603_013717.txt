@@ -10,7 +10,4 @@ HashMap<String, String> stock_symbols = new HashMap<>() {{
     put('ADBE', 'Adobe Inc.');
     put('INTC', 'Intel Corporation');
 }};
-for (i : stock_symbols) {
-
-}
-
+stock_symbols.get('AAPL');

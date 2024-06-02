@@ -21,3 +21,4 @@ complexDict = {
     }
 };
 
+complexDict.get("key1");

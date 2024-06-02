@@ -1,0 +1,14 @@
+//comment 1
+value = 7; input = 9; result = 10;
+if (value > input) {
+    value = 0; input = 5; 
+}
+elif (value < input) { // comment 2 
+    value = -1;
+} elif (value == input) { /* comment 3 */
+    // comment 4
+    value = 50;
+} else {
+    input = 0;
+}
+//end

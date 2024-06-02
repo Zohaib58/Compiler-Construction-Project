@@ -281,7 +281,7 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
             case "keys":
                 methodCallBuilder.append("new ArrayList<>(")
                         .append(dictName)
-                        .append(".keySet()");
+                        .append(".keySet())");
                 break;
             case "values":
                 methodCallBuilder.append("new ArrayList<>(")
@@ -289,7 +289,7 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
                         .append(".values())");
                 break;
             case "items":
-                methodCallBuilder.append("new ArrayList<>( ")
+                methodCallBuilder.append("new ArrayList<>(")
                         .append(dictName)
                         .append(".entrySet())");
                 break;
