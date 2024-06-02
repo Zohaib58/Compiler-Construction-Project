@@ -78,6 +78,12 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     public String visitVariable(PythonDictParser.VariableContext ctx) {
         String name = ctx.IDENTIFIER().getText();
         Symbol symbol = symbolTable.lookup(name);
+
+        if (symbol == null)
+        {
+            return "";
+        }
+
         String type = symbol != null ? symbol.getType() : "Object";
 
         boolean isDeclare = symbol.getIsDeclare();

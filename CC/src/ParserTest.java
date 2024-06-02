@@ -20,7 +20,7 @@ public class ParserTest {
 
 
 
-        String filePath = "test/dictionaryMaking.txt"; // Assuming test.txt is in the same directory
+        String filePath = "test/commentsStartEnd.txt"; // Assuming test.txt is in the same directory
         //String filePath = "test/ifElifElse.txt";
 
         //String filePath = "test/dictionaryMaking.txt";
