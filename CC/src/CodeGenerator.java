@@ -233,6 +233,7 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
     }
 
     public String visitCondition(PythonDictParser.ConditionContext ctx) {
+        System.out.println(ctx.expression(0).getText());
         return ctx.getText(); // Simplified, ideally should handle condition parsing properly
     }
 
