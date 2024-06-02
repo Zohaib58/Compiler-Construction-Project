@@ -8,7 +8,6 @@ stock_symbols = {
     'NFLX': 'Netflix, Inc.',
     'NVDA': 'NVIDIA Corporation',
     'ADBE': 'Adobe Inc.',
-    'INTC': 'Intel Corporation'
+    'INTC': 'Intel Corporation',
+    'AAPL': 'Apple Inc.',
 };
-
-stock_symbols['skjnc'] = 'askx';
