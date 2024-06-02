@@ -1,5 +1,5 @@
 value = 7; input = 9; result = 10;
-if (value > input) {
+if (value + 3 > input) {
     value = 0; input = 5; 
 } elif (value < input) {
     value = -1;

@@ -492,17 +492,17 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
     private String inferExpressionType(PythonDictParser.ExpressionContext ctx) {
 
         if (ctx.STRING_LITERAL() != null) {
-            return "string";
+            return "String";
         } else if (ctx.NUMERIC_LITERAL() != null) {
             String literal = ctx.NUMERIC_LITERAL().getText();
             // Regex to differentiate between integer and floating-point numbers
             if (literal.matches("-?\\d+")) {
-                return "integer";
+                return "Integer";
             } else if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) {
-                return "float";
+                return "Float";
             }
         } else if (ctx.BOOLEAN_LITERAL() != null) {
-            return "boolean";
+            return "Boolean";
         } else if (ctx.IDENTIFIER() != null) {
             Symbol sym = SymbolTable.lookup(ctx.IDENTIFIER().getText());
             if (sym == null) {
@@ -515,7 +515,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // This presumes a method that determines the type based on the method call
             //return determineMethodCallType(ctx.methodCall());
         } else if (ctx.list() != null) {
-            return "list";  // Simplified for both lists and tuples; adjust as needed
+            return "List";  // Simplified for both lists and tuples; adjust as needed
         } else if (ctx.dict() != null) {
             return "HashMap"; // Assuming dictionaries are always mapped to some form of "HashMap"
         } else if (ctx.dictAccess() != null) {
@@ -559,7 +559,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             case "-":
             case "*":
             case "/":
-                if (("integer".equals(type1) && "integer".equals(type2)) || ("float".equals(type1) && "float".equals(type2))) {
+                if (("Integer".equals(type1) && "Integer".equals(type2)) || ("Float".equals(type1) && "Float".equals(type2))) {
                     return true;
                 }
                 // Allow string concatenation using +

@@ -1,0 +1,13 @@
+ArrayList<String> myArr = new ArrayList<>() {{
+    add("hello World");
+    add("Computer Science");
+    add("Compiler");
+}};
+ArrayList<Integer> myArr2 = new ArrayList<>() {{
+    add(1);
+    add(2);
+    add(3);
+    add(-4);
+    add(3);
+}};
+
