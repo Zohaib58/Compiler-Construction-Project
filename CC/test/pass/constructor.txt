@@ -7,3 +7,5 @@ sampleDict = {
     'GOOGL': test2,
     'MSFT': test3
 };
+
+sampleDict.pop('AAPL');

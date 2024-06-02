@@ -1,0 +1,34 @@
+complexDict = {
+    "key1": {
+        "nestedKey1": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": 42}]
+        },
+        "nestedKey2": {
+            "subNestedKey1": [{"deepKey": 3.14}],
+            "subNestedKey2": [{"deepKey": "T"}]
+        }
+    },
+    2: {
+        "listKey": {
+            3 : [{"deepKey": [1, 2, 3]}],
+            "subNestedKey2": [{"deepKey": ["list", "of", "strings"]}]
+        },
+        "simpleKey": {
+            "subNestedKey1": [{"deepKey": {"innerKey": "innerValue"}}],
+            "F": [{"deepKey": "None"}]
+        }
+    },
+    "key3": {
+        "anotherKey1": {
+            "subNestedKey1": [{"deepKey": {"nestedDict": {"moreNested": "value"}}}],
+            "subNestedKey2": [{"deepKey": {"anotherNested": 12345}}]
+        },
+        "anotherKey2": {
+            "subNestedKey1": [{"deepKey": [{"listInList": "value1"}, {"listInList": "value2"}]}],
+            100: [{"deepKey": [{"key": "complex"}, {"key": "structure"}]}]
+        }
+    }
+};
+
+complexDict.pop("key1");

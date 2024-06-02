@@ -1,5 +1,5 @@
 value = 7; input = 9; result = 10;
-if ("abc" == "deg") {
+if ("abc" < 2) {
     value = 0; input = 5; 
 } elif (value < input) {
     value = -1;

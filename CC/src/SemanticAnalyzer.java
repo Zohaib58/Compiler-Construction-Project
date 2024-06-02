@@ -98,8 +98,8 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
 
     switch (methodName) {
         case "get":
-            if (arguments.size() > 1) {
-                System.err.println("Error: Too many arguments for 'get' method.");
+            if (arguments.size() != 1) {
+                System.err.println("Error: Only 1 argument acceptable.");
                 this.hasErrors = true;
             } else if (arguments.size() < 1) {
                 System.err.println("Error: Too few arguments for 'get' method.");
