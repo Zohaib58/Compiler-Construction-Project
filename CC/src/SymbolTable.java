@@ -56,10 +56,7 @@ public class SymbolTable {
         }
         return null;
     }
-    
-    private static void handleError(String message) {
-        System.err.println(message);
-    } 
+
 
 
     // Method to set isDeclare to true for all symbols in all scopes

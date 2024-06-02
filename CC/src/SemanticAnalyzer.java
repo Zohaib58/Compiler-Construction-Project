@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,8 +54,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             }
         }
 
-        // TODO: VSCode Extension
-        // TODO: get gud
+        
 
         else if(!isDeclared || !isSame)
         {
@@ -201,19 +199,10 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             Symbol s = SymbolTable.lookup(name);
             String typee = s.getType();
 
-            // Find the starting index of the keyType
-            int keyTypeStartIndexOfOld = typee.indexOf("<") + 1;
-            // Find the ending index of the keyType
-            int keyTypeEndIndexOfOld = typee.indexOf(",");
-
             // Extract the keyType substring
             String keyTypeOfOld = typee.substring(keyTypeStartIndex, keyTypeEndIndex).trim();
 
-            // Find the starting index of the valueType
-            int valueTypeStartIndexOfOld = keyTypeEndIndex + 1;
-            // Find the ending index of the valueType
-            int valueTypeEndIndexOfOld = typee.indexOf(">");
-
+            
             // Extract the valueType substring
             String valueTypeOfOld = typee.substring(valueTypeStartIndex, valueTypeEndIndex).trim();
 
@@ -499,36 +488,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         return null; // Return null to satisfy the Void return type
     }
     
-    private void visitBinaryOperation(PythonDictParser.ExpressionContext ctx) {
-        String leftType = inferExpressionType(ctx.expression(0));
-        String rightType = inferExpressionType(ctx.expression(1));
-        String operator = ctx.getChild(1).getText();
     
-        switch (operator) {
-            case "*":
-            case "/":
-            case "+":
-            case "-":
-                if (!checkTypeCompatibility(leftType, rightType, operator)) {
-                   // error("Type mismatch in expression: " + leftType + " " + operator + " " + rightType, ctx);
-                }
-               
-                break;
-            case "==":
-            case "!=":
-            case "<":
-            case "<=":
-            case ">":
-            case ">=":
-                if (!leftType.equals(rightType)) {
-                    //error("Type mismatch in comparison: " + leftType + " " + operator + " " + rightType, ctx);
-                }
-                break;
-            default:
-                //error("Unknown operator: " + operator, ctx);
-        }
-    }
-
     private String inferExpressionType(PythonDictParser.ExpressionContext ctx) {
 
         if (ctx.STRING_LITERAL() != null) {
