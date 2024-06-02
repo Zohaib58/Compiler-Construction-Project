@@ -13,7 +13,7 @@ public class ParserTest {
 
         
         
-        String filePath = "test/commentsStartEnd.txt"; // Assuming test.txt is in the same directory
+        String filePath = "test/isUsed.txt"; // Assuming test.txt is in the same directory
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
         PythonDictLexer lexer = new PythonDictLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);

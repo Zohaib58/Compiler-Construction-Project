@@ -5,15 +5,15 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
-    private SymbolTable symbolTable;
     private boolean hasErrors = false;
 
-    public SemanticAnalyzer() {
-        symbolTable = SymbolTable.getInstance(); // Get the singleton instance, just like yourself
+    public SemanticAnalyzer(){
+        SymbolTable.getInstance();
     }
-
+    
     public boolean hasErrors () {
         return this.hasErrors;
+        
     }
 
     @Override

@@ -2,15 +2,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
-    private SymbolTable symbolTable;
     StringBuilder generatedCode = new StringBuilder();
 
     public CodeGenerator() {
-        symbolTable = SymbolTable.getInstance(); // Assuming a singleton pattern for symbol table\
         System.out.println("Is Used Information: ");
-        symbolTable.checkIsUsed();
-        symbolTable.setDeclareForAllSymbols(); // ensure
-        // symbolTable.removeUnusedSymbols();
+        SymbolTable.getInstance();
+        SymbolTable.checkIsUsed();
+        SymbolTable.setDeclareForAllSymbols(); // ensure
+        SymbolTable.removeUnusedSymbols();
 
         // System.out.println();
 
@@ -40,35 +39,37 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         }
         if (ctx.variable() != null) {
             statementBuilder.append(visitVariable(ctx.variable()));
-            statementBuilder.append(";"); // Variables declarations always end with a semicolon
+
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Variables declarations always end with a semicolon
         } else if (ctx.dictValueAssignToKey() != null) {
             statementBuilder.append(visitDictValueAssignToKey(ctx.dictValueAssignToKey()));
-            statementBuilder.append(";"); // Assignment statements end with a semicolon
+
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Assignment statements end with a semicolon
         } else if (ctx.dict() != null) {
             statementBuilder.append(visitDict(ctx.dict()));
             // Direct dictionary definitions within a statement context should end with a
             // semicolon
-            statementBuilder.append(";");
+            if (statementBuilder.length() > 0) statementBuilder.append(";");
         } else if (ctx.forLoop() != null) {
             statementBuilder.append(visitForLoop(ctx.forLoop()));
             // Loops do not need a semicolon after the block
         } else if (ctx.list() != null) {
             statementBuilder.append(visitList(ctx.list()));
             // List declarations end with a semicolon if standalone
-            statementBuilder.append(";");
+            if (statementBuilder.length() > 0) statementBuilder.append(";");
         } else if (ctx.methodCall() != null) {
             statementBuilder.append(visitMethodCall(ctx.methodCall()));
-            statementBuilder.append(";"); // Method calls within statements end with a semicolon
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Method calls within statements end with a semicolon
         } else if (ctx.ifCondition() != null) {
             statementBuilder.append(visitIfCondition(ctx.ifCondition()));
             // Condition blocks do not need a semicolon after the block
         } else if (ctx.dictAccess() != null) {
             statementBuilder.append(visitDictAccess(ctx.dictAccess()));
-            statementBuilder.append(";"); // Dictionary access, likely a part of an expression or assignment, ends with
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Dictionary access, likely a part of an expression or assignment, ends with
                                           // a semicolon
         } else if (ctx.expression() != null) {
             statementBuilder.append(visitExpression(ctx.expression()));
-            statementBuilder.append(";"); // Expressions in statements end with a semicolon
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Expressions in statements end with a semicolon
         }
         statementBuilder.append("\n"); // Add a newline for readability
         return statementBuilder.toString();
@@ -77,7 +78,7 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     @Override
     public String visitVariable(PythonDictParser.VariableContext ctx) {
         String name = ctx.IDENTIFIER().getText();
-        Symbol symbol = symbolTable.lookup(name);
+        Symbol symbol = SymbolTable.lookup(name);
 
         if (symbol == null)
         {
@@ -238,7 +239,7 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
     @Override
     public String visitMethodCall(PythonDictParser.MethodCallContext ctx) {
         String dictName = ctx.IDENTIFIER().getText();
-        Symbol dictSymbol = symbolTable.lookup(dictName);
+        Symbol dictSymbol = SymbolTable.lookup(dictName);
 
         if (dictSymbol == null || !dictSymbol.getType().startsWith("HashMap")) {
             System.out.println(dictName + " is not declared or not a hashmap\n");
