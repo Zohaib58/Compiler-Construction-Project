@@ -1,0 +1,3 @@
+input = 10; text = "blue"; fountain = "notGood";
+sample = 12; notSoGood = -2; 
+

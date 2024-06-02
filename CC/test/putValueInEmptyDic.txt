@@ -1,2 +1,2 @@
 emptyDict = {};
-emptyDict.['key1'] = 'value1';
+emptyDict['key1'] = 'value1';

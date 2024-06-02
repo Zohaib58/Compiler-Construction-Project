@@ -1,0 +1,2 @@
+HashMap<Object, Object> emptyDict = new HashMap<Object, Object>();
+emptyDict.put('key1', 'value1');

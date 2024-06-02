@@ -13,7 +13,14 @@ public class ParserTest {
 
         
         
-        String filePath = "test/ifElifElse.txt"; // Assuming test.txt is in the same directory
+        
+        //String filePath = "test/constructor.txt"; // Assuming test.txt is in the same directory
+        //String filePath = "test/isUSed.txt";
+        //String filePath = "test/emptyList.txt";
+        //String filePath = "test/putValueInEmptyDic.txt";
+
+        String filePath = "test/putValueInEmptyDic.txt";
+
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
         PythonDictLexer lexer = new PythonDictLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
