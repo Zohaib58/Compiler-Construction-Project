@@ -1,0 +1,6 @@
+Integer input = 8;
+String var = "hello";
+if (input>var) {
+var = "compiler";
+}
+

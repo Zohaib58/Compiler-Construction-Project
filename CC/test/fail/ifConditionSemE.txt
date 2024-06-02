@@ -1,0 +1,6 @@
+var = "hello";
+
+if("hello" > 9)
+{
+    var = "compiler";
+}

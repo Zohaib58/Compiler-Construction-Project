@@ -1,0 +1,4 @@
+HashMap<Object, Object> complexDict = new HashMap<Object, Object>();
+complexDict.put("jhb", 8);
+
+complexDict.putAll(additionalData);
