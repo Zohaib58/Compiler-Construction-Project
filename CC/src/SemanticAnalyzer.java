@@ -42,7 +42,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         boolean isDeclared = SymbolTable.lookup(name) != null;
         boolean isSame = true;
 
-        if(isDeclared) // if shariq sucks, then:
+        if(isDeclared) 
         {
             if(type == "dict")
             {
