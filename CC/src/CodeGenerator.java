@@ -194,13 +194,13 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
     @Override
     public String visitForLoop(PythonDictParser.ForLoopContext ctx) {
         String loopVar = ctx.IDENTIFIER().getText();
-        String iterable = visit(ctx.iterable());
+        String iterable = ctx.iterable().getText();
         StringBuilder loopBuilder = new StringBuilder("for (");
         loopBuilder.append(loopVar)
                 .append(" : ")
                 .append(iterable)
                 .append(") {\n");
-        ctx.statement().forEach(stmt -> loopBuilder.append(visit(stmt)));
+        ctx.statement().forEach(stmt -> loopBuilder.append(visitStatement(stmt)));
         loopBuilder.append("}\n");
         return loopBuilder.toString();
     }

@@ -1,0 +1,17 @@
+HashMap<String, String> stock_symbols = new HashMap<>() {{
+    put('AAPL', 'Apple Inc.');
+    put('GOOGL', 'Alphabet Inc.');
+    put('MSFT', 'Microsoft Corporation');
+    put('AMZN', 'Amazon.com Inc.');
+    put('TSLA', 'Tesla, Inc.');
+    put('FB', 'Meta Platforms, Inc.');
+    put('NFLX', 'Netflix, Inc.');
+    put('NVDA', 'NVIDIA Corporation');
+    put('ADBE', 'Adobe Inc.');
+    put('INTC', 'Intel Corporation');
+}};
+for (i : stock_symbols) {
+Integer input = 10;
+input = 1;
+}
+

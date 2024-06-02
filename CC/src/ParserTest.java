@@ -19,7 +19,7 @@ public class ParserTest {
         //String filePath = "test/emptyList.txt";
         //String filePath = "test/putValueInEmptyDic.txt";
 
-        String filePath = "test/putValueInEmptyDic.txt";
+        String filePath = "test/forLoop.txt";
 
         CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
         PythonDictLexer lexer = new PythonDictLexer(charStream);

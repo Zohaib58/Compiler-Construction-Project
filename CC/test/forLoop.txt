@@ -11,5 +11,5 @@ stock_symbols = {
     'INTC': 'Intel Corporation'
 };
 
-for i in stock_symbols{input = 10;}
+for i in stock_symbols{input = 10; input = 1;}
 
