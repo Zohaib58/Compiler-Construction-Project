@@ -22,7 +22,7 @@ pair : key COLON value ;
 
 key : constructor | STRING_LITERAL | NUMERIC_LITERAL | dictAccess ;
 
-value : constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list  | dictAccess ;
+value : constructor | STRING_LITERAL | NUMERIC_LITERAL | dict | list  | dictAccess | IDENTIFIER ;
 
 constructor : IDENTIFIER PAREN_OPEN argumentList? PAREN_CLOSE ;
 

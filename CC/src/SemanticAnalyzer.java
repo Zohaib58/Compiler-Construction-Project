@@ -35,6 +35,10 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             else if (ctx.list() != null) {
                 type = inferListType(ctx.list());
                 }
+                else if (ctx.constructor() != null)
+                {
+                    type = ctx.constructor().IDENTIFIER().getText();
+                }
 
         boolean isDeclared = SymbolTable.lookup(name) != null;
         boolean isSame = true;
@@ -61,6 +65,7 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
 
         return visitChildren(ctx);
     }
+
 
     @Override
     public Void visitMethodCall(PythonDictParser.MethodCallContext ctx) {
@@ -319,7 +324,9 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             // Handle ValueContext by checking its specific type
             PythonDictParser.ValueContext valueCtx = (PythonDictParser.ValueContext) ctx;
             return inferValueContextType(valueCtx);
-        } else {
+        }
+        
+         else {
             // For literals or unrecognized types, pass their text to inferLiteralType
             String text = ctx.getText();
             return inferLiteralType(text);
@@ -335,10 +342,20 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
             return inferDictType(ctx.dict());
         } else if (ctx.list() != null) {
             return inferListType(ctx.list());
+        } else if (ctx.IDENTIFIER() != null) {
+            Symbol sym = SymbolTable.lookup(ctx.IDENTIFIER().getText());
+            if (sym == null) {
+                // Handle undeclared identifiers
+                System.out.println("Error: at " + ctx.getStart().getLine() + ". " + ctx.IDENTIFIER().getText() + " is not declared previously");
+            } 
+              
+            return sym.type; // Use this for any additional checks or logging
+
         } else {
             // Handle other possible types or fallback
             return inferLiteralType(ctx.getText());
         }
+        
     }
     
     public String inferLiteralType(String literal) {
@@ -664,13 +681,13 @@ class SemanticAnalyzer extends PythonDictParserBaseVisitor<Void> {
         String keyType = inferLiteralType(key);
         String valType = inferLiteralType(value);
 
-        if (!keyType.equals(keyTypeOfDict))
+        if (!(keyTypeOfDict.equals("Object")) && !keyType.equals(keyTypeOfDict))
         {
             System.err.println("Semantic Error: Incorrect Key type");
             this.hasErrors = true;
         }
 
-        else if (!valType.equals(ValTypeOfDict))
+        else if (!(ValTypeOfDict.equals("Object")) &&!valType.equals(ValTypeOfDict))
         {
             System.err.println("Semantic Error: Incorrect Value type");
             this.hasErrors = true;

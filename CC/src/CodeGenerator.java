@@ -101,7 +101,7 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
             if (ctx.dict().pairList() != null) {
                 variableCode.append(visitDict(ctx.dict()));
             } else {
-                variableCode.append("new " + type);
+                variableCode.append("new " + type + "()");
             }
         } else if (ctx.list() != null) {
             if (ctx.list().elementList() != null) {
@@ -112,23 +112,33 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         }
 
         else if (ctx.constructor() != null) {
-            PythonDictParser.ConstructorContext obj = ctx.constructor();
-            String id = obj.IDENTIFIER().getText();
-
-            generatedCode.append(id)
-                    .append(" ")
-                    .append(name)
-                    .append(" = new ")
-                    .append(id)
-                    .append(obj.PAREN_OPEN())
-                    .append(obj.argumentList().getText())
-                    .append(obj.PAREN_CLOSE());
-
-            return generatedCode.toString();
+            variableCode.append(visitConstructor(ctx.constructor()));
         }
         return variableCode.toString();
     }
 
+    @Override
+    public String visitConstructor(PythonDictParser.ConstructorContext ctx) {
+        String className = ctx.IDENTIFIER().getText();
+        String args = visitArgumentList(ctx.argumentList());  // Assuming visitArgumentList properly formats the argument list string
+    
+        StringBuilder constructorCode = new StringBuilder();
+        constructorCode.append("new ")
+                       .append(className)
+                       .append("(")
+                       .append(args)
+                       .append(")")
+                       .append("");  // End the statement with a newline for readability
+    
+        return constructorCode.toString();
+    }
+    
+    @Override
+    public String visitArgumentList(PythonDictParser.ArgumentListContext ctx) {
+        List<String> arguments = new ArrayList<>();
+        ctx.expression().forEach(expr -> arguments.add(visit(expr)));
+        return String.join(", ", arguments);
+    }
     @Override
     public String visitDict(PythonDictParser.DictContext ctx) {
 
@@ -140,7 +150,7 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
                     .append(visitValue(pair.value()))
                     .append(");\n");
         });
-        dictBuilder.append("}}\n");
+        dictBuilder.append("}}");
         return dictBuilder.toString();
     }
 
@@ -152,9 +162,28 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
                     .append(visitValue(value))
                     .append(");\n");
         });
-        listBuilder.append("}}\n");
+        listBuilder.append("}}");
         return listBuilder.toString();
     }
+
+    @Override
+public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyContext ctx) {
+    String dictName = ctx.IDENTIFIER().getText();
+    String keyExpression = ctx.key().getText();  // Assuming there's a method to handle the translation of the key context
+    String valueExpression = visitValue(ctx.value());  // Assuming there's a method to handle the translation of the value context
+
+    StringBuilder methodCallBuilder = new StringBuilder();
+    methodCallBuilder.append(dictName)
+                     .append(".put(")
+                     .append(keyExpression)
+                     .append(", ")
+                     .append(valueExpression)
+                     .append(")")
+                     .append("");  // Add a newline for clarity in the generated code
+
+    return methodCallBuilder.toString();
+}
+
 
     @Override
     public String visitForLoop(PythonDictParser.ForLoopContext ctx) {
@@ -186,7 +215,7 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         if (ctx.elseBlock() != null) {
             ifBuilder.append("else {\n")
                     .append(visitStatements(ctx.elseBlock().statement()))
-                    .append("}\n");
+                    .append("}");
         }
         return ifBuilder.toString();
     }
@@ -287,9 +316,11 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
             return visitDict(ctx.dict());
         } else if (ctx.list() != null) {
             return visitList(ctx.list());
-        } else {
+        } else if (ctx.constructor() != null) {
+            return visitConstructor(ctx.constructor());
+        }
             return ctx.getText(); // Simplified handling, should cover more types
         }
-    }
-
 }
+
+

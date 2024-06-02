@@ -1,4 +1,7 @@
 complexDict = {};
 
-complexDict.put("jhb":9)
+complexDict["jhb"] = 8;
 
+additionalData = { "jhb": 10,  "nyc": 15};
+
+complexDict.update(additionalData);
