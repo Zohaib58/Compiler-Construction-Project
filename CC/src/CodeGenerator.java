@@ -10,12 +10,12 @@ public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
         System.out.println("Is Used Information: ");
         symbolTable.checkIsUsed();
         symbolTable.setDeclareForAllSymbols(); // ensure
-        // symbolTable.removeUnusedSymbols();
+        symbolTable.removeUnusedSymbols();
 
-        // System.out.println();
+        System.out.println();
 
-        // System.out.println("Is Used Information: " );
-        // symbolTable.checkIsUsed();
+        System.out.println("Is Used Information: " );
+        symbolTable.checkIsUsed();
 
     }
 
