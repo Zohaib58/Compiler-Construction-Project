@@ -1,6 +1,6 @@
 var = "hello";
 
-if("hello" > 9)
+if("hello" + 9 > 12)
 {
     var = "compiler";
 }
