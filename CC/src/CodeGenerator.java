@@ -250,7 +250,7 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
         }
         
         
-        if ("true".equalsIgnoreCase(literal) || "false".equalsIgnoreCase(literal)) return "boolean"; // Check for boolean values
+        if ("true".equalsIgnoreCase(literal) || "false".equalsIgnoreCase(literal)) return "Boolean"; // Check for boolean values
     // Add more types as necessary
         // Add more types as necessary
         return "unknown";
