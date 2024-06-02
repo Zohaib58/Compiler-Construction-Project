@@ -232,10 +232,29 @@ public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyCon
         return statementsCode.toString();
     }
 
+    @Override
     public String visitCondition(PythonDictParser.ConditionContext ctx) {
         System.out.println(ctx.expression(0).getText());
-        return ctx.getText(); // Simplified, ideally should handle condition parsing properly
+        if ((ctx.expression(0) != null && ctx.expression(1) != null) && (ctx.EQUALS_TO()!= null) && ((inferLiteralType(ctx.expression(0).getText()).equals("String")  && inferLiteralType(ctx.expression(1).getText()).equals("String")) || (inferLiteralType(ctx.expression(0).getText()).equals("Object")  && inferLiteralType(ctx.expression(1).getText()).equals("Object")))){
+            return ctx.expression(0).getText() + ".equals(" + ctx.expression(1).getText() + ")";
+        }
+        //ctx.expression(0).
+        return ctx.getText(); 
     }
+    public String inferLiteralType(String literal) {
+        if (literal.matches("-?\\d+")) return "Integer";    // Regex for integer
+        if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) return "Float"; // Regex for floating-point
+        if (literal.matches("\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'")) {
+            // This code will execute if the literal matches the regex for a string enclosed in either double or single quotes.
+            return "String"; // Check for quotes for strings
+        }
+        
+        
+        if ("true".equalsIgnoreCase(literal) || "false".equalsIgnoreCase(literal)) return "boolean"; // Check for boolean values
+    // Add more types as necessary
+        // Add more types as necessary
+        return "unknown";
+    }    
 
     @Override
     public String visitMethodCall(PythonDictParser.MethodCallContext ctx) {
