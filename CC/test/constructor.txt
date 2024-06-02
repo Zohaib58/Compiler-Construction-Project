@@ -1,0 +1,9 @@
+test1 = color("hello", 2, "world", "s", 726, -1);
+test2 = base("hello", 2);
+test3 = randomClass("compiler", "TT", 8);
+
+sampleDict = {
+    'AAPL': test1,
+    'GOOGL': test2,
+    'MSFT': test3
+};

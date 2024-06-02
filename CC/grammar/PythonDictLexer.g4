@@ -57,9 +57,15 @@ IDENTIFIER : [a-zA-Z_][a-zA-Z_0-9]* ;
 STRING_LITERAL : '"' ( ~["\\] | '\\' . )* '"' | '\'' ( ~['\\] | '\\' . )* '\'' ;
 
 // Token for numeric literals (integers and floating-point numbers)
-NUMERIC_LITERAL : [0-9]+ ('.' [0-9]+)? ;
+NUMERIC_LITERAL : '-'? [0-9]+ ('.' [0-9]+)? ;
 
 BOOLEAN_LITERAL : 'True' | 'False' ;
+
+// Token for single-line comments
+LINE_COMMENT : '//' ~[\r\n]* ;
+
+// Token for multi-line comments
+BLOCK_COMMENT : '/*' .*? '*/' ;
 
 // Skipping whitespaces and newlines
 WS : [ \t\r\n]+ -> skip ;

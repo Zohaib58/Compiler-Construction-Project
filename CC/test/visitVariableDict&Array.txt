@@ -1,0 +1,8 @@
+myDict = {'a': 2, 'b':6};
+myDict2 = {'a': 2, 'b':6, 'c': 'd'}; 
+myDict3 = {'a': 2, 'b':6, 'c': 'd'}; 
+
+
+myArr = ['hello World', 'Computer Science', 'Compiler'];
+myArr2 = [1, 2, 3, -4, 3, 'n']; 
+myArr3 = [1, 2, 3, -4, 3];

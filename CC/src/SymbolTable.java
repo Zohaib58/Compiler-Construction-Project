@@ -37,24 +37,26 @@ public class SymbolTable {
         if (currentScope.containsKey(name)) {
             System.err.println("Redefinition of symbol '" + name);
         } else {
-            Symbol sym = new Symbol(name, type, currentScopeLevel, lineNumber, isDeclare);
+            Symbol sym = new Symbol(name, type, currentScopeLevel, lineNumber, isDeclare, false);
             currentScope.put(name, sym);
         }
     }
 
     public static Symbol lookup(String name) {
+        Symbol s =  null;
         for (int i = scopeStack.size() - 1; i >= 0; i--) {
             if (scopeStack.get(i).containsKey(name)) {
-                return scopeStack.get(i).get(name);
+                s = scopeStack.get(i).get(name);
+                if (s.isDeclare & !s.isUsed)
+                {
+                    s.setIsUSed();
+                }
+                return s;
             }
         }
-        System.err.println("Symbol '" + name + "' not defined yet.");
         return null;
     }
-    
-    private static void handleError(String message) {
-        System.err.println(message);
-    } 
+
 
 
     // Method to set isDeclare to true for all symbols in all scopes
@@ -65,6 +67,29 @@ public class SymbolTable {
             }
         }
     }
+
+        // Method to set isDeclare to true for all symbols in all scopes
+        public static void checkIsUsed() {
+            for (Map<String, Symbol> scope : scopeStack) {
+                for (Symbol symbol : scope.values()) {
+                    System.out.println(symbol.getName() + ": " + symbol.getIsUsed());
+                }
+            }
+        }
+
+    
+        public static void removeUnusedSymbols() {
+            for (Map<String, Symbol> scope : scopeStack) {
+                Iterator<Map.Entry<String, Symbol>> it = scope.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, Symbol> entry = it.next();
+                    if (!entry.getValue().getIsUsed()) {
+                        it.remove(); // Safely remove the entry using iterator
+                    }
+                }
+            }
+        }
+        
 
     // Method to set isDeclare to true for all symbols in all scopes
     public static void setDeclareTrueSymbol(Symbol symbol) {

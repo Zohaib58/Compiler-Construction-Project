@@ -1,411 +1,352 @@
 import java.util.ArrayList;
-import java.util.Map;
-
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import java.util.List;
 
 public class CodeGenerator extends PythonDictParserBaseVisitor<String> {
     StringBuilder generatedCode = new StringBuilder();
-    private SymbolTable symbolTable;
 
-    public CodeGenerator ()
-    {
-        symbolTable = SymbolTable.getInstance(); // Get the singleton instance
-        symbolTable.setDeclareForAllSymbols();
+    public CodeGenerator() {
+        System.out.println("Is Used Information: ");
+        SymbolTable.getInstance();
+        SymbolTable.checkIsUsed();
+        SymbolTable.setDeclareForAllSymbols(); // ensure
+        SymbolTable.removeUnusedSymbols();
+
+        System.out.println();
+
+        System.out.println("Is Used Information: " );
+        SymbolTable.checkIsUsed();
+
     }
-
-
 
     @Override
     public String visitProgram(PythonDictParser.ProgramContext ctx) {
+
         for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-            visit(stmt); // Visit each statement and process it
+            generatedCode.append(visitStatement(stmt)); // Process each statement and append the generatedCode
         }
         return generatedCode.toString();
     }
 
     @Override
+    public String visitStatement(PythonDictParser.StatementContext ctx) {
+        StringBuilder statementBuilder = new StringBuilder();
+        // Check the type of statement and generate the corresponding code
+
+        if (ctx.statementWithLineComments() != null)
+        {
+            statementBuilder.append(ctx.statementWithLineComments().getText());
+            //statementBuilder.append("\n");
+        }
+        if (ctx.variable() != null) {
+            statementBuilder.append(visitVariable(ctx.variable()));
+
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Variables declarations always end with a semicolon
+        } else if (ctx.dictValueAssignToKey() != null) {
+            statementBuilder.append(visitDictValueAssignToKey(ctx.dictValueAssignToKey()));
+
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Assignment statements end with a semicolon
+        } else if (ctx.dict() != null) {
+            statementBuilder.append(visitDict(ctx.dict()));
+            // Direct dictionary definitions within a statement context should end with a
+            // semicolon
+            if (statementBuilder.length() > 0) statementBuilder.append(";");
+        } else if (ctx.forLoop() != null) {
+            statementBuilder.append(visitForLoop(ctx.forLoop()));
+            // Loops do not need a semicolon after the block
+        } else if (ctx.list() != null) {
+            statementBuilder.append(visitList(ctx.list()));
+            // List declarations end with a semicolon if standalone
+            if (statementBuilder.length() > 0) statementBuilder.append(";");
+        } else if (ctx.methodCall() != null) {
+            statementBuilder.append(visitMethodCall(ctx.methodCall()));
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Method calls within statements end with a semicolon
+        } else if (ctx.ifCondition() != null) {
+            statementBuilder.append(visitIfCondition(ctx.ifCondition()));
+            // Condition blocks do not need a semicolon after the block
+        } else if (ctx.dictAccess() != null) {
+            statementBuilder.append(visitDictAccess(ctx.dictAccess()));
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Dictionary access, likely a part of an expression or assignment, ends with
+                                          // a semicolon
+        } else if (ctx.expression() != null) {
+            statementBuilder.append(visitExpression(ctx.expression()));
+            if (statementBuilder.length() > 0) statementBuilder.append(";"); // Expressions in statements end with a semicolon
+        }
+        statementBuilder.append("\n"); // Add a newline for readability
+        return statementBuilder.toString();
+    }
+
+    @Override
     public String visitVariable(PythonDictParser.VariableContext ctx) {
         String name = ctx.IDENTIFIER().getText();
-        String assignmenttOperator = ctx.ASSIGN().getText();
-        //System.out.println("name: " + name);
-        String type = "";
+        Symbol symbol = SymbolTable.lookup(name);
 
-        Symbol s = SymbolTable.lookup(name);
-        //System.out.println("type: " + s.getType());
-
-        //System.out.println("s: " + s);
-
-        boolean isdeclared = s.getIsDeclare();
-        //System.out.println("s: " + isdeclared);
-
-        if (!isdeclared){
-            type = s.getType();
+        if (symbol == null)
+        {
+            return "";
         }
 
-        if (s.getType().equals("integer")) 
-        {
-            generatedCode.append(type).append(" ").append(name).append(" ").append(assignmenttOperator).append(" ").append(ctx.NUMERIC_LITERAL()).append(";");
-            generatedCode.append(" ");
-            s.setIsDeclare(true);
-            System.out.println();
+        String type = symbol != null ? symbol.getType() : "Object";
+
+        boolean isDeclare = symbol.getIsDeclare();
+
+        StringBuilder variableCode = new StringBuilder();
+
+        if (!isDeclare) {
+            variableCode.append(type).append(" ").append(name).append(" = ");
+            symbol.isDeclare = true;
+        } else {
+            variableCode.append(name).append(" = ");
         }
 
-        else if (s.getType().equals("String"))
-        {
-            generatedCode.append(type).append(" ").append(name).append(" ").append(assignmenttOperator).append(" ").append(ctx.STRING_LITERAL()).append(";");
-            generatedCode.append(" ");
-            s.setIsDeclare(true);
-            System.out.println();
-        }
-        
-        else if (s.getType().startsWith("HashMap"))
-        {
+        if (ctx.STRING_LITERAL() != null) {
+            variableCode.append(ctx.STRING_LITERAL().getText());
+        } else if (ctx.NUMERIC_LITERAL() != null) {
+            variableCode.append(ctx.NUMERIC_LITERAL().getText());
+        } else if (ctx.dict() != null) {
 
-            //System.out.println(s.getType());
-            generatedCode.append(s.getType())
-            .append(" ")
-            .append(name)
-            .append(" ")
-            .append(assignmenttOperator)
-            .append(" ")
-            .append("new ")
-            .append(s.getType())
-            .append(";\n");
-
-            PythonDictParser.DictContext dictCtx = ctx.dict();
-
-            for (PythonDictParser.PairContext pair : dictCtx.pairList().pair()) {
-            generatedCode.append(name)
-                            .append(".put(")
-                            .append(pair.key().getText())
-                            .append(", ")
-                            .append(pair.value().getText())
-                            .append(");\n");
+            if (ctx.dict().pairList() != null) {
+                variableCode.append(visitDict(ctx.dict()));
+            } else {
+                variableCode.append("new " + type + "()");
             }
-            //generatedCode.append(" ");
-            s.setIsDeclare(true);
-            System.out.println();
-
+        } else if (ctx.list() != null) {
+            if (ctx.list().elementList() != null) {
+                variableCode.append(visitList(ctx.list()));
+            } else {
+                variableCode.append("new " + type);
+            }
         }
 
-        else if (s.getType().startsWith("ArrayList"))
-        {
-            generatedCode.append(s.getType())
-            .append(" ")
-            .append(name)
-            .append(" ")
-            .append(assignmenttOperator)
-            .append(" ")
-            .append("new ")
-            .append(s.getType())
-            .append(";\n");
-
-            PythonDictParser.ListContext listCtx = ctx.list();
-            for (PythonDictParser.ValueContext value : listCtx.elementList().value()) {
-                generatedCode.append(name)
-                            .append(".add(")
-                            .append(value.getText()) // Make sure this returns the appropriate string representation
-                            .append(");\n");
-    }
-    generatedCode.append(" ");
-    s.setIsDeclare(true);
-    System.out.println();
+        else if (ctx.constructor() != null) {
+            variableCode.append(visitConstructor(ctx.constructor()));
         }
-
-        return null; 
-        
+        return variableCode.toString();
     }
+
+    @Override
+    public String visitConstructor(PythonDictParser.ConstructorContext ctx) {
+        String className = ctx.IDENTIFIER().getText();
+        String args = visitArgumentList(ctx.argumentList());  // Assuming visitArgumentList properly formats the argument list string
+    
+        StringBuilder constructorCode = new StringBuilder();
+        constructorCode.append("new ")
+                       .append(className)
+                       .append("(")
+                       .append(args)
+                       .append(")")
+                       .append("");  // End the statement with a newline for readability
+    
+        return constructorCode.toString();
+    }
+    
+    @Override
+    public String visitArgumentList(PythonDictParser.ArgumentListContext ctx) {
+        List<String> arguments = new ArrayList<>();
+        ctx.expression().forEach(expr -> arguments.add(visit(expr)));
+        return String.join(", ", arguments);
+    }
+    @Override
+    public String visitDict(PythonDictParser.DictContext ctx) {
+
+        StringBuilder dictBuilder = new StringBuilder("new HashMap<>() {{\n");
+        ctx.pairList().pair().forEach(pair -> {
+            dictBuilder.append("    put(")
+                    .append(pair.key().getText())
+                    .append(", ")
+                    .append(visitValue(pair.value()))
+                    .append(");\n");
+        });
+        dictBuilder.append("}}");
+        return dictBuilder.toString();
+    }
+
+    @Override
+    public String visitList(PythonDictParser.ListContext ctx) {
+        StringBuilder listBuilder = new StringBuilder("new ArrayList<>() {{\n");
+        ctx.elementList().value().forEach(value -> {
+            listBuilder.append("    add(")
+                    .append(visitValue(value))
+                    .append(");\n");
+        });
+        listBuilder.append("}}");
+        return listBuilder.toString();
+    }
+
+    @Override
+public String visitDictValueAssignToKey(PythonDictParser.DictValueAssignToKeyContext ctx) {
+    String dictName = ctx.IDENTIFIER().getText();
+    String keyExpression = ctx.key().getText();  // Assuming there's a method to handle the translation of the key context
+    String valueExpression = visitValue(ctx.value());  // Assuming there's a method to handle the translation of the value context
+
+    StringBuilder methodCallBuilder = new StringBuilder();
+    methodCallBuilder.append(dictName)
+                     .append(".put(")
+                     .append(keyExpression)
+                     .append(", ")
+                     .append(valueExpression)
+                     .append(")")
+                     .append("");  // Add a newline for clarity in the generated code
+
+    return methodCallBuilder.toString();
+}
+
 
     @Override
     public String visitForLoop(PythonDictParser.ForLoopContext ctx) {
-        // Logic to generate code for a for-loop
-        String iterableName = ctx.iterable().getText();
-        Symbol iterableSymbol = SymbolTable.lookup(iterableName); 
-
-        if (iterableSymbol == null || !iterableSymbol.getType().startsWith("HashMap")) {
-            System.err.println("Error: The variable '" + iterableName + "' is not declared as a HashMap.");
-            return null;
-        }
-
-        Symbol s = SymbolTable.lookup(iterableName);
-        String keyType = extractKeyType(s.getType());
-
-        //System.out.println("key Type: " + keyType);       
-
-        generatedCode.append("for (")
-                    .append(keyType)
-                    .append(" key : ")
-                    .append(iterableName)
-                    .append(".keySet()) {\n")
-                    .append("}\n");
-
-        System.out.println();
-
-        return null;
-    }
-
-    public static String extractKeyType(String input) {
-        int start = input.indexOf('<') + 1;
-        int end = input.indexOf(',');
-        
-        if (start > 0 && end > start) {
-            return input.substring(start, end).trim();
-        }     
-        return null; 
-    }
-
-    public static String extractValueType(String input) {
-        int start = input.indexOf(',') + 1;
-        int end = input.indexOf('>');
-    
-        if (start > 0 && end > start) {
-            return input.substring(start, end).trim();
-        }
-        return null;
+        String loopVar = ctx.IDENTIFIER().getText();
+        String iterable = ctx.iterable().getText();
+        StringBuilder loopBuilder = new StringBuilder("for (");
+        loopBuilder.append(loopVar)
+                .append(" : ")
+                .append(iterable)
+                .append(") {\n");
+        ctx.statement().forEach(stmt -> loopBuilder.append(visitStatement(stmt)));
+        loopBuilder.append("}\n");
+        return loopBuilder.toString();
     }
 
     @Override
-public String visitMethodCall(PythonDictParser.MethodCallContext ctx) {
-    String dictName = ctx.IDENTIFIER().getText();
-    Symbol dictSymbol = symbolTable.lookup(dictName);
-
-    Symbol s = SymbolTable.lookup(dictName);
-    String keyType = extractKeyType(s.getType());
-    String valueType = extractValueType(s.getType());
-    
-
-    if (dictSymbol == null || !dictSymbol.getType().startsWith("HashMap")) {
-        // Handle error: dictionary not declared or not a hashmap
-        generatedCode.append("// Error: ").append(dictName).append(" is not declared or not a hashmap\n");
-        return null;
+    public String visitIfCondition(PythonDictParser.IfConditionContext ctx) {
+        StringBuilder ifBuilder = new StringBuilder();
+        ifBuilder.append("if (")
+                .append(visitCondition(ctx.ifBlock().condition()))
+                .append(") {\n")
+                .append(visitStatements(ctx.ifBlock().statement()))
+                .append("}\n");
+        ctx.elifBlock().forEach(elif -> ifBuilder.append("else if (")
+                .append(visitCondition(elif.condition()))
+                .append(") {\n")
+                .append(visitStatements(elif.statement()))
+                .append("}\n"));
+        if (ctx.elseBlock() != null) {
+            ifBuilder.append("else {\n")
+                    .append(visitStatements(ctx.elseBlock().statement()))
+                    .append("}");
+        }
+        return ifBuilder.toString();
     }
 
-    String methodName = ctx.methodName().getText();
-    switch (methodName) {
-        case "get":
-            // Assuming the 'get' method call includes one argument
-            //String key = ctx.argumentList().get(0).expression(0);
-            String key = ctx.argumentList(0).expression(0).getText();
-            System.out.println("key: " + ctx.argumentList(0).expression(0).getText());
-            
-            generatedCode//append(dictSymbol.getType())
-                .append("")
-                .append(dictName)
-                .append(ctx.DOT())
-                .append(methodName)
-                .append(ctx.PAREN_OPEN())
-                .append(key)
-                .append(ctx.PAREN_CLOSE())
-                .append(";")
-                .append("\n");
-            break;
-
-
-        case "keys":
-        //ArrayList<String> keys = new ArrayList<>(myHashMap.keySet());
-
-        // Code generation for 'keys' method
-            generatedCode.append("ArrayList<type> variableName ")
-                .append("= new ArrayList<>")
-                .append(ctx.PAREN_OPEN())
-                .append(dictName)
-                .append(".keySet()")
-                .append(ctx.PAREN_CLOSE())
-                .append(";")
-                .append("\n");
-            break;
-
-
-        case "values":
-        //ArrayList<Integer> values = new ArrayList<>(myHashMap.values());
-
-        // Code generation for 'values' method
-        generatedCode.append("ArrayList<type> variableName ")
-            .append("= new ArrayList<>")
-            .append(ctx.PAREN_OPEN())
-            .append(dictName)
-            .append(".keySet()")
-            .append(ctx.PAREN_CLOSE())
-            .append(";")
-            .append("\n");
-            break;
-
-
-        case "items":
-       //ArrayList<Map.Entry<String, Integer>> items = new ArrayList<>(myHashMap.entrySet());
-
-        // Code generation for 'items' method - not directly supported in Java, simulated using entrySet
-            generatedCode.append("ArrayList<Map.Entry<")
-            .append(keyType)
-            .append(", ")
-            .append(valueType)
-            .append(">> ")
-            .append("variableName")
-            .append("= ")
-            .append("= new ArrayList<>")
-            .append(ctx.PAREN_OPEN())
-            .append(dictName)
-            .append(".keySet()")
-            .append(ctx.PAREN_CLOSE())
-            .append(";")
-            .append("\n");
-
-            break;
-
-        case "pop":
-            // Assuming pop method takes one key argument
-            // Assuming visit method returns a String
-            String popKey = visit(ctx.argumentList().get(0).expression(0));
-            generatedCode.append(dictSymbol.getType())
-                .append(" removedValue = ")
-                .append(dictName)
-                .append(".remove(")
-                .append(popKey)
-                .append(");\n");
-            break;
-        case "update":
-            // Assuming update method takes one dictionary argument
-            String updateDict = visit(ctx.argumentList().get(0).expression(0));
-            
-            generatedCode.append(dictName)
-                .append(".putAll(")
-                .append(updateDict)
-                .append(");\n");
-            break;
-        default:
-            generatedCode.append("// Error: Unknown method ").append(methodName).append("\n");
-            break;
-    }
-    return null;
-}
-
-@Override
-public String visitDictAccess(PythonDictParser.DictAccessContext ctx) {
-    String dictName = ctx.IDENTIFIER().getText();
-    String keyExpression = ctx.expression().getText(); 
-    
-        generatedCode//append(dictSymbol.getType())
-            .append("")
-            .append(dictName)
-            .append(".")
-            .append("get")
-            .append("(")
-            .append(keyExpression)
-            .append(")")
-            .append(";");
-
-    return null;
-}
-
-@Override
-public String visitDictValueAssignToKey (PythonDictParser.DictValueAssignToKeyContext ctx) {
-    String dictName = ctx.IDENTIFIER().getText();
-    String keyExpression = ctx.key().getText(); 
-    String valueExpression = ctx.value().getText();
-    
-        generatedCode//append(dictSymbol.getType())
-            .append(dictName)
-            .append(".")
-            .append("put")
-            .append("(")
-            .append(keyExpression)
-            .append(", ")
-            .append(valueExpression)
-            .append(")")
-            .append(";");
-
-    return null;
-}
-
-@Override
-public String visitIfCondition(PythonDictParser.IfConditionContext ctx) {
-    StringBuilder generatedCode = new StringBuilder();
-    generatedCode.append(visitIfBlock(ctx.ifBlock()));
-
-    // Visit all elif blocks
-    for (PythonDictParser.ElifBlockContext elifBlock : ctx.elifBlock()) {
-        generatedCode.append(visitElifBlock(elifBlock));
+    private String visitStatements(List<PythonDictParser.StatementContext> statements) {
+        StringBuilder statementsCode = new StringBuilder();
+        statements.forEach(stmt -> statementsCode.append(visit(stmt)));
+        return statementsCode.toString();
     }
 
-    // Visit else block if it exists
-    if (ctx.elseBlock() != null) {
-        generatedCode.append(visitElseBlock(ctx.elseBlock()));
+    @Override
+    public String visitCondition(PythonDictParser.ConditionContext ctx) {
+        System.out.println(ctx.expression(0).getText());
+        if ((ctx.expression(0) != null && ctx.expression(1) != null) && (ctx.EQUALS_TO()!= null) && ((inferLiteralType(ctx.expression(0).getText()).equals("String")  && inferLiteralType(ctx.expression(1).getText()).equals("String")) || (inferLiteralType(ctx.expression(0).getText()).equals("Object")  && inferLiteralType(ctx.expression(1).getText()).equals("Object")))){
+            return ctx.expression(0).getText() + ".equals(" + ctx.expression(1).getText() + ")";
+        }
+        //ctx.expression(0).
+        return ctx.getText(); 
     }
-
-    return generatedCode.toString();
-}
-
-@Override
-public String visitIfBlock(PythonDictParser.IfBlockContext ctx) {
-    generatedCode.append("\n").append("if (")
-                 .append(ctx.condition().getText())
-                 .append(") {\n");
-
-    for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-            System.out.println("jhfhgc"+visit(stmt)); 
+    public String inferLiteralType(String literal) {
+        if (literal.matches("-?\\d+")) return "Integer";    // Regex for integer
+        if (literal.matches("-?\\d*\\.\\d+([eE][-+]?\\d+)?")) return "Float"; // Regex for floating-point
+        if (literal.matches("\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'")) {
+            // This code will execute if the literal matches the regex for a string enclosed in either double or single quotes.
+            return "String"; // Check for quotes for strings
+        }
         
+        
+        if ("true".equalsIgnoreCase(literal) || "false".equalsIgnoreCase(literal)) return "Boolean"; // Check for boolean values
+    // Add more types as necessary
+        // Add more types as necessary
+        return "unknown";
+    }    
+
+    @Override
+    public String visitMethodCall(PythonDictParser.MethodCallContext ctx) {
+        String dictName = ctx.IDENTIFIER().getText();
+        Symbol dictSymbol = SymbolTable.lookup(dictName);
+
+        if (dictSymbol == null || !dictSymbol.getType().startsWith("HashMap")) {
+            System.out.println(dictName + " is not declared or not a hashmap\n");
+            return null;
+        }
+
+        StringBuilder methodCallBuilder = new StringBuilder();
+        String methodName = ctx.methodName().getText();
+        switch (methodName) {
+            case "get":
+                String key = ctx.argumentList(0).expression(0).getText();
+                methodCallBuilder.append(dictName)
+                        .append(".")
+                        .append(methodName)
+                        .append("(")
+                        .append(key)
+                        .append(")");
+                break;
+            case "keys":
+                methodCallBuilder.append("new ArrayList<>(")
+                        .append(dictName)
+                        .append(".keySet()");
+                break;
+            case "values":
+                methodCallBuilder.append("new ArrayList<>(")
+                        .append(dictName)
+                        .append(".values())");
+                break;
+            case "items":
+                methodCallBuilder.append("new ArrayList<>( ")
+                        .append(dictName)
+                        .append(".entrySet())");
+                break;
+            case "pop":
+                String popKey = visit(ctx.argumentList().get(0).expression(0));
+                methodCallBuilder.append(dictName)
+                        .append(".remove(")
+                        .append(popKey)
+                        .append(")");
+                break;
+            case "update":
+                String updateDict = visit(ctx.argumentList().get(0).expression(0));
+                methodCallBuilder.append(dictName)
+                        .append(".putAll(")
+                        .append(updateDict)
+                        .append(")");
+                break;
+            default:
+                System.out.println("// Error: Unknown method " + methodName);
+                break;
+        }
+        return methodCallBuilder.toString();
+
     }
 
-    generatedCode.append("}\n");
-    return generatedCode.toString();
-}
+    @Override
+    public String visitDictAccess(PythonDictParser.DictAccessContext ctx) {
+        return ctx.IDENTIFIER().getText() + ".get(" + visit(ctx.expression()) + ")";
+    }
 
-@Override
-public String visitElifBlock(PythonDictParser.ElifBlockContext ctx) {
-    generatedCode.append("else if (")
-                 .append(ctx.condition().getText())
-                 .append(") {\n");
-
-    for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-        if (visit(stmt) != null) {        
-        visit(stmt); 
+    @Override
+    public String visitExpression(PythonDictParser.ExpressionContext ctx) {
+        // Simple recursive call for nested expressions or handling based on the
+        // specific expression types
+        if (ctx.IDENTIFIER() != null) {
+            return ctx.IDENTIFIER().getText();
+        } else if (ctx.NUMERIC_LITERAL() != null) {
+            return ctx.NUMERIC_LITERAL().getText();
+        } else if (ctx.STRING_LITERAL() != null) {
+            return ctx.STRING_LITERAL().getText();
+        } else {
+            // handle more complex expressions, calls etc.
+            return ctx.getText();
         }
     }
 
-    generatedCode.append("}\n");
-    return generatedCode.toString();
-}
-
-@Override
-public String visitElseBlock(PythonDictParser.ElseBlockContext ctx) {
-    generatedCode.append("else {\n");
-
-    for (PythonDictParser.StatementContext stmt : ctx.statement()) {
-        if (visit(stmt) != null) {        
-            generatedCode.append(visit(stmt)); 
+    @Override
+    public String visitValue(PythonDictParser.ValueContext ctx) {
+        if (ctx.dict() != null) {
+            return visitDict(ctx.dict());
+        } else if (ctx.list() != null) {
+            return visitList(ctx.list());
+        } else if (ctx.constructor() != null) {
+            return visitConstructor(ctx.constructor());
         }
-    }
-
-    generatedCode.append("}\n");
-    return generatedCode.toString();
+            return ctx.getText(); // Simplified handling, should cover more types
+        }
 }
 
 
-    
-
-
-    // @Override
-    // public String visitExpression(PythonDictParser.ExpressionContext ctx) {
-    //     // Handle different kinds of expressions
-    //     if (ctx.getChildCount() == 3) { // Handling binary operations
-    //         String operator = ctx.getChild(1).getText(); // Operator like +, -, *, /
-    //         String left = visit(ctx.expression(0)); // Recursively handle the left expression
-    //         String right = visit(ctx.expression(1)); // Recursively handle the right expression
-    //         return "(" + left + " " + operator + " " + right + ")";
-    //     } else if (ctx.NUMERIC_LITERAL() != null) {
-    //         return ctx.NUMERIC_LITERAL().getText(); // Directly return the numeric literal
-    //     } else if (ctx.STRING_LITERAL() != null) {
-    //         return ctx.STRING_LITERAL().getText(); // Directly return the string literal
-    //     } else if (ctx.IDENTIFIER() != null) {
-    //         return ctx.IDENTIFIER().getText(); // Return the identifier's name
-    //     }
-    //     // Add more cases as needed for other types of expressions
-    //     return "";
-    // }
-
-    // Consider implementing other visit methods for different context types,
-    // like visitMethodCall, visitList, etc., depending on your language specifications.
-
-    // Optionally, add methods to handle different types of statements, loops, or function calls.
-    // This method can be extended to include type checks, symbol table interactions, and more.
-}

@@ -1,0 +1,44 @@
+value = 7; input = 9; result = 10;
+next = 10; a = 5;
+
+myArr = ['hello World', 'Computer Science', 'Compiler'];
+
+stock_symbols = {
+    'AAPL': 'Apple Inc.',
+    'GOOGL': 'Alphabet Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'AMZN': 'Amazon.com Inc.',
+    'TSLA': 'Tesla, Inc.',
+    'FB': 'Meta Platforms, Inc.',
+    'NFLX': 'Netflix, Inc.',
+    'NVDA': 'NVIDIA Corporation',
+    'ADBE': 'Adobe Inc.',
+    'INTC': 'Intel Corporation'
+};
+
+dummy = {
+    'AAPL': 'Apple Inc.',
+    'GOOGL': 'Alphabet Inc.',
+    'INTC': 'Intel Corporation'
+};
+
+
+if (value > input) {
+    value = 0; input = 5; 
+} elif (value < input) {
+    value = -1;
+} elif (value == input) {
+    value = 50;
+} else {
+    input = 0;
+}
+
+stock_symbols.get('GOOGL');
+
+if (next > 0)
+{
+    next = 9;
+}
+
+str = "hef";
+str = 'f';

@@ -1,0 +1,23 @@
+complexDict = {
+    "key1": {
+        "nestedKey1": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": "deepValue"}]
+        },
+        "nestedKey2": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": "deepValue"}]
+        }
+    },
+    "key2": {
+        "listKey": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": "deepValue"}]
+        },
+        "simpleKey": {
+            "subNestedKey1": [{"deepKey": "deepValue"}],
+            "subNestedKey2": [{"deepKey": "deepValue"}]
+        }
+    }
+};
+

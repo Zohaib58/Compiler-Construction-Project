@@ -22,6 +22,12 @@ public interface PythonDictParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(PythonDictParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PythonDictParser#statementWithLineComments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatementWithLineComments(PythonDictParser.StatementWithLineCommentsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PythonDictParser#separator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -87,12 +93,6 @@ public interface PythonDictParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitList(PythonDictParser.ListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link PythonDictParser#tuple}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTuple(PythonDictParser.TupleContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PythonDictParser#elementList}.
 	 * @param ctx the parse tree

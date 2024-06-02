@@ -1,57 +1,72 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class ParserTest {
     public static void main(String[] args) throws Exception {
-        // Assuming you have a string input for testing
-        // String input = "v = 'a'; v = 'j'; v = 7; j = 'hsx';";
-        // String input = "a = 5; dict = {1: '1', 2: '2', 3: '3'}; for key in dict {}; h
-        // = 5; value = dict.get(1);";
 
-        // String input = "dict = {1: '1', 2: '2', 3: '3'}; dict.get(1);";
-        // String input = "dict = {1: '1', 2: '2', 3: '3'}; dict.keys();";
-        // String input = "dict = {1: '1', 2: '2', 3: '3'}; list(dict.items());";
+        
+        
+        
+        //String filePath = "test/constructor.txt"; // Assuming test.txt is in the same directory
+        //String filePath = "test/isUSed.txt";
+        //String filePath = "test/emptyList.txt";
+        //String filePath = "test/putValueInEmptyDic.txt";
 
-        //String input = "value = 5; input = 7; value -  input;";
+        String filePath = "test/forLoop.txt";
 
-        //String input = "dict = {1: '1', 2: '2', 3: '3'}; dict[1] ";
-        //String input = "mydict = {1: '1', 2: '2', 3: '3'}; mydict[1] = '2'; ";
-        String input = "value = 7; input = 9;  if (value > input) { value = 0; input = 10;} elif (value < input) { value = - 1; } elif (value == input) { value = 50; } else { input = 0; }";
-
-        CharStream charStream = CharStreams.fromString(input);
-
-        // Create a lexer that feeds off of the input CharStream
+        CharStream charStream = CharStreams.fromPath(Paths.get(filePath));
         PythonDictLexer lexer = new PythonDictLexer(charStream);
-
-        // Create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-        // Create a parser that feeds off the tokens buffer
         PythonDictParser parser = new PythonDictParser(tokens);
 
-        // Begin parsing at the 'program' rule (the entry point of your parser grammar)
         ParseTree tree = parser.program();
-
-        System.out.println(tree.toStringTree(parser));
-        // Instantiate your SemanticAnalyzer
-        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
-
-        // Visit the tree using the semantic analyzer to perform semantic checks
-
-        semanticAnalyzer.visit(tree);
-
-        if (semanticAnalyzer.hasErrors()) {
-            System.out.println("Semantic errors detected, stopping compilation.");
-            return; // Stop further processing if errors exist
+        if (parser.getNumberOfSyntaxErrors() > 0) {
+            System.out.println("Syntax errors found, compilation stopped.");
+            return;
         }
 
-        // If no errors, proceed with code generation
+        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
+        semanticAnalyzer.visit(tree);
+        if (semanticAnalyzer.hasErrors()) {
+            System.out.println("Semantic errors detected, stopping compilation.");
+            return;
+        }
+
         CodeGenerator codeGenerator = new CodeGenerator();
         String generatedCode = codeGenerator.visit(tree);
 
-        // Output or save the generated code
-        System.out.println();
-        System.out.println("Generated Code:");
-        System.out.println(generatedCode);
+        // Construct the output filename based on the input file name and the current timestamp
+        String baseName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
+        String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String outputFileName = "output/output_" + baseName + "_" + dateTime + ".txt";
+
+        // Output the generated code to a file
+        writeToFile(generatedCode, outputFileName);
+    }
+
+    // Helper method to write a string to a file
+    private static void writeToFile(String content, String pathStr) {
+        Path path = Paths.get(pathStr);
+        try {
+            // Ensure the directory exists
+            Path directory = path.getParent();
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
+            }
+
+            // Write content to file
+            Files.writeString(path, content);
+            System.out.println("Generated code written to " + pathStr);
+        } catch (IOException e) {
+            System.err.println("Failed to write to file: " + e.getMessage());
+        }
     }
 }
+

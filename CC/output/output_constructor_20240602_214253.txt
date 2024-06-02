@@ -1,0 +1,4 @@
+color test1 = new color("hello", 2, "world", "s", 726, -1);
+base test2 = new base("hello", 2);
+randomClass test3 = new randomClass("compiler", "TT", 8);
+

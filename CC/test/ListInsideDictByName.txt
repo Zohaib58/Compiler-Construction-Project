@@ -1,0 +1,4 @@
+myArr = ["hello World", "Computer Science", "Compiler"];
+myArr2 = [1, 2, 3, -4, 3]; 
+
+myDict = {'arr1': myArr, 'arr2': myArr2};
